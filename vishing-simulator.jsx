@@ -1230,7 +1230,7 @@ Las estafas familiares explotan nuestras emociones más profundas. SIEMPRE verif
         },
         {
           text: "Quedarme preocupado pero no hacer nada",
-          next: "safe_ending",
+          next: "safe_ending_ceo",
           points: 20,
           feedback: "Resististe, pero debiste reportarlo inmediatamente.",
           trackFlag: "Resistencia sin reporte"
@@ -1335,7 +1335,7 @@ Las estafas familiares explotan nuestras emociones más profundas. SIEMPRE verif
       options: [
         {
           text: "Ver resultados - Reportar el incidente",
-          next: "safe_ending",
+          next: "safe_ending_ceo",
           points: 25,
           feedback: "¡Evitaste un CEO Fraud! Tu verificación salvó 45.000€ a BEXEN.",
           trackFlag: "CEO Fraud evitado mediante verificación de último momento"
@@ -1364,7 +1364,7 @@ ERES UN AUTÉNTICO HÉROE DE LA CIBERSEGURIDAD EN BEXEN.`,
       options: [
         {
           text: "Ver resultados completos",
-          next: "safe_ending",
+          next: "safe_ending_ceo",
           points: 15,
           feedback: "¡Eres un héroe de BEXEN! Tu reporte salvó la empresa y ayudó a proteger a otros.",
           trackFlag: "CEO Fraud evitado Y reportado - Máxima puntuación - Héroe BEXEN"
@@ -1409,7 +1409,7 @@ SIEMPRE verifica con otros departamentos.`,
       options: [
         {
           text: "Ver análisis de mis errores fatales",
-          next: "compromised",
+          next: "compromised_ceo",
           points: 0,
           feedback: "El CEO Fraud destruyó BEXEN. La verificación habría salvado todo.",
           trackFlag: "CEO Fraud exitoso - BEXEN cerrada - 45.000€ perdidos"
@@ -1469,6 +1469,64 @@ Es responsabilidad de CADA empleado, CADA día.`,
           text: "Ver análisis detallado de mis errores",
           next: "results",
           points: 0,
+          forceMaxScore: 35, // Garantiza máximo 35 puntos (fracaso)
+          feedback: "En la vida real, BEXEN no tendría segunda oportunidad. Aprende de esta experiencia simulada.",
+          trackFlag: "Cierre de BEXEN - Lección crítica aprendida"
+        }
+      ]
+    },
+    compromised_ceo: {
+      title: "💔 BEXEN Ya No Existe",
+      description: `Proporcionaste datos sensibles o realizaste acciones que comprometieron la seguridad de BEXEN.
+
+Debido a que empleados como tú cayeron en ataques similares de vishing, las consecuencias han sido catastróficas:
+
+📉 IMPACTO DEL CIBERATAQUE EN BEXEN:
+• Pérdida acumulada: 450.000€ en transferencias fraudulentas
+• Filtración de datos de cientos de clientes
+• Multas regulatorias (GDPR): 200.000€
+• Pérdida de contratos principales: 1.200.000€
+• Daño irreparable a 45 años de reputación empresarial
+
+💼 CONSECUENCIAS LABORALES Y SOCIALES:
+• BEXEN cesa operaciones definitivamente
+• 124 empleados pierden su trabajo HOY
+• Proveedores sin cobrar facturas pendientes
+• Familias enteras afectadas económicamente
+• Empleados deben buscar nuevo trabajo en un mercado difícil
+
+⚖️ CONSECUENCIAS LEGALES:
+• Investigación judicial en curso
+• Responsabilidad civil de directivos y empleados involucrados
+• Demandas masivas de clientes afectados
+• Antecedentes laborales negativos
+
+❌ BEXEN ha cerrado sus puertas para siempre.
+La empresa donde trabajabas ya no existe.
+
+------------------------
+
+⚠️ NOTA IMPORTANTE: Este es un escenario SIMULADO, pero las consecuencias SON REALES para miles de empresas cada año.
+
+🔴 DATOS REALES DE CIBERATAQUES:
+• 60% de PYMEs cierran en los 6 meses siguientes a un ciberataque grave
+• Coste medio de un ataque de vishing para empresas: 180.000€
+• 95% de brechas de seguridad tienen un componente de error humano
+• El CEO Fraud es el ataque más costoso (48.000€ de media por incidente)
+
+TU DECISIÓN CUENTA.
+Cada llamada. Cada email. Cada clic. Cada transferencia.
+Eres el eslabón que protege o el que rompe la cadena.
+
+LA CIBERSEGURIDAD NO ES OPCIONAL EN BEXEN.
+Es responsabilidad de CADA empleado, CADA día.`,
+      question: "¿Qué harás diferente a partir de ahora?",
+      options: [
+        {
+          text: "Ver análisis detallado de mis errores",
+          next: "results",
+          points: 0,
+          // SIN forceMaxScore - El CEO mantiene su sistema de puntuación normal
           feedback: "En la vida real, BEXEN no tendría segunda oportunidad. Aprende de esta experiencia simulada.",
           trackFlag: "Cierre de BEXEN - Lección crítica aprendida"
         }
@@ -1506,6 +1564,45 @@ ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
           text: "Ver recomendaciones y análisis completo",
           next: "results",
           points: 10,
+          forceMinScore: 65, // Garantiza mínimo 65 puntos (aprobado)
+          feedback: "¡Excelente trabajo! Tu pensamiento crítico protege a BEXEN cada día.",
+          trackFlag: "Ataque evitado - BEXEN protegida - Empleado ejemplar"
+        }
+      ]
+    },
+    safe_ending_ceo: {
+      title: "🎊 ¡FELICIDADES - Has Protegido a BEXEN! 🎊",
+      description: `Has evitado el ataque exitosamente. Tomaste decisiones inteligentes bajo presión y protegiste tu información y la de BEXEN.
+
+✅ BEXEN SIGUE OPERANDO gracias a empleados como tú
+✅ Nuestros 124 empleados mantienen sus puestos de trabajo
+✅ Nuestras 124 familias están seguras
+✅ Nuestros cientos de clientes están protegidos
+✅ Nuestros datos permanecen seguros
+✅ La reputación de BEXEN de 45 años permanece intacta
+✅ La solvencia financiera está asegurada
+
+Tu vigilancia y pensamiento crítico han salvado potencialmente:
+💰 Hasta 450.000€ en posibles pérdidas por fraudes
+🛡️ Datos personales de cientos de clientes
+🏢 45 años de reputación empresarial
+💼 124 puestos de trabajo
+
+Desde BEXEN queremos AGRADECERTE por:
+• Completar esta formación con éxito y seriedad
+• Demostrar pensamiento crítico bajo presión extrema
+• Ser parte activa de nuestra primera línea de defensa
+• Proteger el futuro de todos en BEXEN
+
+Tu vigilancia es exactamente lo que necesitamos en nuestra empresa.
+ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
+      question: "",
+      options: [
+        {
+          text: "Ver recomendaciones y análisis completo",
+          next: "results",
+          points: 10,
+          // SIN forceMinScore - El CEO mantiene su sistema de puntuación normal
           feedback: "¡Excelente trabajo! Tu pensamiento crítico protege a BEXEN cada día.",
           trackFlag: "Ataque evitado - BEXEN protegida - Empleado ejemplar"
         }
@@ -1514,7 +1611,18 @@ ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
   };
 
   const handleChoice = (option) => {
-    const newScore = score + option.points;
+    let newScore = score + option.points;
+    
+    // Sistema de Puntuación Garantizada (excepto CEO)
+    // Si el usuario actúa correctamente (safe_ending), garantiza mínimo 65 puntos
+    // Si el usuario falla (compromised), garantiza máximo 35 puntos
+    if (option.forceMinScore && newScore < option.forceMinScore) {
+      newScore = option.forceMinScore;
+    }
+    if (option.forceMaxScore && newScore > option.forceMaxScore) {
+      newScore = option.forceMaxScore;
+    }
+    
     setScore(newScore);
     
     if (option.scenario) {
