@@ -56,6 +56,13 @@ const VishingSimulator = () => {
           points: 0,
           feedback: "Escenario de paquetería seleccionado.",
           scenario: "package"
+        },
+        {
+          text: "CEO/Director - Transferencia Urgente (Corporativo)",
+          next: "ceo_intro",
+          points: 0,
+          feedback: "Escenario corporativo avanzado seleccionado.",
+          scenario: "ceo"
         }
       ]
     },
@@ -943,6 +950,211 @@ const VishingSimulator = () => {
       ]
     },
 
+    // ==================== ESCENARIO 6: CEO FRAUD (CORPORATIVO) ====================
+    ceo_intro: {
+      title: "📞 Llamada del Despacho del Director",
+      description: "Recibes una llamada. Identificador: 'Dir. General - Ext. 101'. Voz autoritaria pero cordial: 'Hola, soy Roberto Mendoza, el Director General. Disculpa que te llame directamente, pero estoy en el aeropuerto camino a una reunión con inversores y necesito tu ayuda urgente con un tema delicado. ¿Tienes un momento? Es importante.'",
+      question: "¿Cómo respondes?",
+      options: [
+        {
+          text: "Claro, Director. ¿En qué puedo ayudarle?",
+          next: "ceo_urgent",
+          points: -5,
+          feedback: "Continúas la conversación...",
+          trackFlag: "Llamada no verificada de autoridad superior"
+        },
+        {
+          text: "¿Puede llamarme desde su móvil corporativo para verificar?",
+          next: "ceo_pressure",
+          points: 20,
+          feedback: "Intentas verificar...",
+          trackFlag: "Intento de verificación de identidad"
+        },
+        {
+          text: "Con todo respeto, voy a colgar y llamar a su asistente para confirmar",
+          next: "safe_ending",
+          points: 35,
+          feedback: "¡PERFECTO! Verificación a través de canales oficiales.",
+          trackFlag: "Verificación correcta ante solicitud inusual"
+        }
+      ]
+    },
+    ceo_urgent: {
+      title: "La Situación Urgente",
+      description: "Roberto: 'Gracias. Mira, estamos cerrando una adquisición confidencial de una empresa competidora. NADIE puede saberlo aún, ni siquiera el CFO - lo sabrá mañana. Necesito que hagas una transferencia de 45.000€ hoy mismo a la cuenta de nuestros asesores legales en Suiza. Es para pagar honorarios del due diligence. Si no se paga hoy, perdemos el trato y meses de trabajo.'",
+      question: "Tu respuesta:",
+      options: [
+        {
+          text: "Entendido. ¿A qué cuenta transfiero?",
+          next: "ceo_account",
+          points: -15,
+          feedback: "La autoridad y urgencia te convencen...",
+          trackFlag: "Aceptación de solicitud financiera sin verificar"
+        },
+        {
+          text: "Esto debe pasar por el proceso normal de aprobaciones",
+          next: "ceo_bypass",
+          points: 15,
+          feedback: "Insistes en procedimientos...",
+          trackFlag: "Intento de seguir protocolos corporativos"
+        },
+        {
+          text: "Lo siento, pero debo verificar con Finanzas. Es protocolo.",
+          next: "ceo_confidential",
+          points: 25,
+          feedback: "Mantienes los protocolos...",
+          trackFlag: "Adherencia a protocolos de seguridad"
+        }
+      ]
+    },
+    ceo_pressure: {
+      title: "Presión con Profesionalidad",
+      description: "Roberto: 'Entiendo tu precaución, es lo correcto. Pero estoy literalmente embarcando en 10 minutos y mi móvil corporativo está sin batería - por eso llamo desde el fijo del lounge VIP del aeropuerto. Mira, si quieres verificar, llama a mi asistente María... aunque está en reunión y no podrá atender hasta en 2 horas. Para entonces ya habré perdido el trato de 2 millones. ¿Confías en mí o no?'",
+      question: "¿Qué decides?",
+      options: [
+        {
+          text: "Tiene razón, confío. Dígame qué hacer.",
+          next: "ceo_account",
+          points: -15,
+          feedback: "La presión profesional funciona...",
+          trackFlag: "Presión emocional con urgencia temporal"
+        },
+        {
+          text: "Prefiero esperar las 2 horas y verificar. Lo siento.",
+          next: "safe_ending",
+          points: 30,
+          feedback: "¡BIEN! No cedes ante presión de autoridad.",
+          trackFlag: "Resistencia a presión de figura de autoridad"
+        },
+        {
+          text: "Le envío un email para tener todo documentado",
+          next: "ceo_no_email",
+          points: 20,
+          feedback: "Buscas dejar rastro escrito...",
+          trackFlag: "Intento de documentación de solicitud"
+        }
+      ]
+    },
+    ceo_confidential: {
+      title: "Confidencialidad Extrema",
+      description: "Roberto: 'Mira, aprecio tu profesionalidad, pero esto es ESTRICTAMENTE CONFIDENCIAL. Si llamas a Finanzas, todo el edificio lo sabrá en una hora. Tenemos un topo filtrando info a la competencia - por eso te llamo a TI, porque confío en ti. Si filtras esto, perdemos millones y habría consecuencias legales graves. ¿Prefieres arriesgar tu carrera por seguir un protocolo o ayudar a la empresa?'",
+      question: "¿Cómo actúas?",
+      options: [
+        {
+          text: "Entiendo la confidencialidad. ¿Qué debo hacer?",
+          next: "ceo_account",
+          points: -20,
+          feedback: "La amenaza velada te presiona...",
+          trackFlag: "Intimidación con consecuencias profesionales"
+        },
+        {
+          text: "Precisamente por confidencialidad debo verificar. Cuelgo.",
+          next: "safe_ending",
+          points: 35,
+          feedback: "¡PERFECTO! No cedes a intimidación.",
+          trackFlag: "Reconocimiento de táctica de intimidación"
+        }
+      ]
+    },
+    ceo_bypass: {
+      title: "Bypass de Procesos",
+      description: "Roberto: 'Los procesos normales tardan 3-5 días. No tenemos ese tiempo. ¿Sabes cuánto vale este trato? 2 millones de euros. ¿Y sabes qué pasa si lo perdemos por burocracia? Despidos. Este es el tipo de flexibilidad que separa a empleados valiosos de empleados promedio. Tú decides en qué categoría quieres estar.'",
+      question: "Tu decisión:",
+      options: [
+        {
+          text: "Tiene razón. Haré la transferencia ahora.",
+          next: "ceo_account",
+          points: -20,
+          feedback: "La presión profesional vence los protocolos...",
+          trackFlag: "Violación de protocolos bajo presión de autoridad"
+        },
+        {
+          text: "Lo siento, pero no puedo saltarme los controles. Es mi responsabilidad.",
+          next: "safe_ending",
+          points: 35,
+          feedback: "¡EXCELENTE! Priorizas seguridad sobre presión.",
+          trackFlag: "Protección de controles de seguridad"
+        }
+      ]
+    },
+    ceo_no_email: {
+      title: "Evitar Rastro Escrito",
+      description: "Roberto: 'NO. Nada por email. Te acabo de explicar que hay un topo. Si envías un email, se filtra y perdemos todo. Esta es una operación verbal únicamente. Confío en tu criterio y discreción. Si no confías en mí, dilo ahora y buscaré a alguien más confiable. Tu elección.'",
+      question: "¿Qué haces?",
+      options: [
+        {
+          text: "Entendido, sin email. Procedo con la transferencia.",
+          next: "ceo_account",
+          points: -20,
+          feedback: "Aceptas operar sin documentación...",
+          trackFlag: "Operación financiera sin documentación"
+        },
+        {
+          text: "Sin documentación escrita, no puedo proceder. Lo siento.",
+          next: "safe_ending",
+          points: 35,
+          feedback: "¡PERFECTO! Documentación es esencial.",
+          trackFlag: "Insistencia en documentación adecuada"
+        }
+      ]
+    },
+    ceo_account: {
+      title: "Los Detalles Bancarios",
+      description: "Roberto: 'Perfecto, sabía que podía contar contigo. La cuenta es: IBAN CH76 0483 5012 3456 7800 9. Titular: 'LexCorp Advisory SA'. Concepto: 'Honorarios Q4'. Exactamente 45.000€. Hazlo en los próximos 30 minutos y llámame a este número cuando esté hecho. Ah, y por supuesto, ni una palabra a nadie hasta mañana. Gracias por tu profesionalidad.' [Cuelga]",
+      question: "Tu decisión final:",
+      options: [
+        {
+          text: "Hacer la transferencia inmediatamente",
+          next: "compromised_corporate",
+          points: -35,
+          feedback: "ERROR CRÍTICO: Nunca hagas transferencias sin verificar.",
+          trackFlag: "Transferencia fraudulenta sin verificación (CEO Fraud)"
+        },
+        {
+          text: "Espera... algo no cuadra. Voy a verificar antes de hacer nada.",
+          next: "ceo_verification",
+          points: 30,
+          feedback: "¡BIEN! Tu instinto te alerta.",
+          trackFlag: "Detección tardía de banderas rojas"
+        },
+        {
+          text: "Llamar inmediatamente al Director REAL para confirmar",
+          next: "safe_ending",
+          points: 35,
+          feedback: "¡EXCELENTE! Verificación final antes de actuar.",
+          trackFlag: "Verificación final salvó la situación"
+        }
+      ]
+    },
+    ceo_verification: {
+      title: "Verificación Crítica",
+      description: "Llamas al número directo del Director General que tienes en el directorio corporativo. Su asistente responde: 'El Director Mendoza está en la oficina en reunión, ¿quién llama?' Le explicas la situación. Respuesta: 'Eso es imposible. El Director NO está de viaje y NUNCA pediría transferencias así. Esto es fraude. Voy a alertar a Seguridad inmediatamente.'",
+      question: "Resultado:",
+      options: [
+        {
+          text: "Ver resultados",
+          next: "safe_ending",
+          points: 25,
+          feedback: "¡Evitaste un CEO Fraud! Tu verificación salvó 45.000€ a la empresa.",
+          trackFlag: "CEO Fraud evitado mediante verificación"
+        }
+      ]
+    },
+    compromised_corporate: {
+      title: "💼 Fraude Corporativo Exitoso",
+      description: "Realizaste la transferencia de 45.000€. Al día siguiente descubres que fue un fraude. No era el Director General. Los atacantes investigaron la empresa, conocían nombres, jerarquías, y hasta el número de extensión de directorio. El dinero fue enviado a una cuenta en Suiza y luego dispersado. Es irrecuperable. Habrá investigación interna, posibles consecuencias laborales y un caso con las autoridades que durará meses. El CEO Fraud es uno de los ataques más costosos y sofisticados contra empresas.",
+      question: "Lección aprendida:",
+      options: [
+        {
+          text: "Ver mis resultados",
+          next: "results",
+          points: 0,
+          feedback: "El CEO Fraud causó pérdidas graves. SIEMPRE verifica solicitudes financieras inusuales.",
+          trackFlag: "Víctima de CEO Fraud - 45.000€ perdidos"
+        }
+      ]
+    },
+
     // ==================== FINALES ====================
     compromised: {
       title: "💔 Información Comprometida",
@@ -1266,31 +1478,6 @@ const VishingSimulator = () => {
               <Shield className="w-4 h-4" />
               <p>Entorno seguro de aprendizaje. Toma tus decisiones como lo harías en la vida real.</p>
             </div>
-          </div>
-        </div>
-
-        {/* Info Box */}
-        <div className="mt-6 bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
-          <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2 text-lg">
-            💡 Recuerda para Situaciones Reales:
-          </h3>
-          <div className="space-y-2 text-gray-700">
-            <p className="flex items-start gap-2">
-              <span className="text-blue-600 font-bold">•</span>
-              <span>Si recibes una llamada sospechosa: <strong>cuelga, busca el número oficial</strong> de la entidad, y llama tú mismo.</span>
-            </p>
-            <p className="flex items-start gap-2">
-              <span className="text-blue-600 font-bold">•</span>
-              <span><strong>NUNCA</strong> des CVV, PIN, contraseñas, o acceso remoto por teléfono, sin importar la urgencia.</span>
-            </p>
-            <p className="flex items-start gap-2">
-              <span className="text-blue-600 font-bold">•</span>
-              <span>La <strong>urgencia extrema</strong> es la señal de alerta más importante.</span>
-            </p>
-            <p className="flex items-start gap-2">
-              <span className="text-blue-600 font-bold">•</span>
-              <span>Verifica emergencias familiares llamando a otros miembros de la familia.</span>
-            </p>
           </div>
         </div>
       </div>
