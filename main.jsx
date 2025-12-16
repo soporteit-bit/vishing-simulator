@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import VishingSimulator from './VishingSimulator.jsx'
+import VishingSimulator from './vishing-simulator.jsx'
 
 // Render the app
 ReactDOM.createRoot(document.getElementById('root')).render(
