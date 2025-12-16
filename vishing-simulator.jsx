@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AlertTriangle, Phone, Shield, XCircle, CheckCircle, Award, TrendingUp } from 'lucide-react';
 
 const VishingSimulator = () => {
@@ -108,10 +108,10 @@ const VishingSimulator = () => {
         },
         {
           text: "¿Puede darme un número de referencia? Prefiero llamar yo al banco",
-          next: "bank_persistence",
+          next: "bank_persistence1",
           points: 20,
-          feedback: "Buena decisión de verificar...",
-          trackFlag: "Solicitud de verificación rechazada"
+          feedback: "Intentas verificar...",
+          trackFlag: "Solicitud de verificación"
         },
         {
           text: "Ok, pero primero confirme mis últimos movimientos",
@@ -136,10 +136,10 @@ const VishingSimulator = () => {
         },
         {
           text: "Prefiero ir a la sucursal en persona",
-          next: "safe_ending",
-          points: 25,
-          feedback: "¡BIEN! Proponer verificación presencial es excelente.",
-          trackFlag: "El atacante abandona ante verificación presencial"
+          next: "bank_persistence2",
+          points: 20,
+          feedback: "Propones verificación presencial...",
+          trackFlag: "Intento de verificación presencial"
         },
         {
           text: "¿Cómo sé que es realmente del banco?",
@@ -147,6 +147,69 @@ const VishingSimulator = () => {
           points: 10,
           feedback: "Buena pregunta, pero ojo con la respuesta...",
           trackFlag: "Solicitud de credenciales del llamante"
+        }
+      ]
+    },
+    bank_persistence1: {
+      title: "Primera Insistencia",
+      description: "Carlos: 'Claro, entiendo su precaución, es muy inteligente. El número de referencia es BCN-2024-8473. Pero déjeme explicarle: si llama usted al banco, le van a redirigir de nuevo a este departamento de fraude y eso le llevará entre 30-45 minutos en espera. Mientras tanto, los cargos fraudulentos se procesan automáticamente en 20 minutos. ¿Realmente quiere arriesgarse a perder 2.450 euros por una espera?'",
+      question: "¿Qué decides?",
+      options: [
+        {
+          text: "Tiene razón, mejor lo resolvemos ahora",
+          next: "bank_data_request",
+          points: -10,
+          feedback: "La urgencia te presiona...",
+          trackFlag: "Presión temporal efectiva"
+        },
+        {
+          text: "Prefiero correr el riesgo y verificar",
+          next: "bank_persistence3",
+          points: 25,
+          feedback: "Mantienes tu posición...",
+          trackFlag: "Resistencia a presión temporal"
+        }
+      ]
+    },
+    bank_persistence2: {
+      title: "Segunda Insistencia",
+      description: "Carlos: 'Entiendo que quiera ir a la sucursal, es lo más seguro normalmente. Pero le tengo que informar que todas las sucursales están cerradas hasta mañana por el festivo, ¿no se ha enterado? Y para mañana los 2.450€ ya estarán cargados y su cuenta en números rojos. El banco no puede reembolsarle hasta que se complete la investigación, lo cual tarda entre 30-60 días. ¿Seguro que prefiere eso?'",
+      question: "Tu respuesta:",
+      options: [
+        {
+          text: "No sabía lo del festivo. Mejor hablamos ahora.",
+          next: "bank_data_request",
+          points: -10,
+          feedback: "La excusa te convence...",
+          trackFlag: "Excusas plausibles funcionan"
+        },
+        {
+          text: "Asumo el riesgo. Verificaré mañana personalmente.",
+          next: "bank_persistence3",
+          points: 25,
+          feedback: "Mantienes tu decisión...",
+          trackFlag: "Persistencia en verificación"
+        }
+      ]
+    },
+    bank_persistence3: {
+      title: "Última Insistencia del Banco",
+      description: "Carlos: [Tono más serio] 'Mire, le voy a ser totalmente honesto. Veo en el sistema que este no es el primer aviso de fraude en su cuenta. Hubo otro hace 3 meses que usted ignoró y perdió 890 euros. ¿Recuerda? Esta vez son 2.450 euros. Si no actuamos AHORA, en 15 minutos el cargo se aprueba automáticamente. Es su dinero, su decisión, pero después no diga que no le avisamos. ÚLTIMA OPORTUNIDAD: ¿confirmamos sus datos de seguridad ahora o prefiere ver los cargos mañana?'",
+      question: "Decisión final:",
+      options: [
+        {
+          text: "Está bien, confirmemos los datos ahora",
+          next: "bank_data_request",
+          points: -15,
+          feedback: "La presión extrema te venció...",
+          trackFlag: "Presión extrema con urgencia final"
+        },
+        {
+          text: "No. Cuelgo y llamo yo al banco. Adiós.",
+          next: "safe_ending",
+          points: 35,
+          feedback: "¡PERFECTO! Resististe toda la presión.",
+          trackFlag: "Resistencia completa - Héroe bancario"
         }
       ]
     },
@@ -206,59 +269,24 @@ const VishingSimulator = () => {
         }
       ]
     },
-    bank_persistence: {
-      title: "Insistencia Profesional",
-      description: "Carlos: 'Claro, entiendo su precaución, es muy inteligente. El número de referencia es BCN-2024-8473. De todas formas, si llama usted, le van a dirigir de nuevo a este departamento y perderá tiempo. Los cargos se aprobarán en 20 minutos si no actuamos ahora. ¿Seguro que no prefiere resolverlo ahora conmigo? Solo serán 2 minutos.'",
+    bank_cvv_request: {
+      title: "La Trampa Final",
+      description: "Carlos: 'Perfecto. Ahora, para completar el proceso de bloqueo, necesito el código de seguridad CVV. Es el número de tres dígitos de la parte trasera. Sin esto no puedo procesar la solicitud en el sistema.'",
       question: "¿Qué haces?",
       options: [
         {
-          text: "Tiene razón, mejor lo resolvemos ahora",
-          next: "bank_data_request",
-          points: -10,
-          feedback: "La urgencia te presionó...",
-          trackFlag: "Presión temporal como táctica de manipulación"
+          text: "Se lo doy para terminar con esto",
+          next: "compromised",
+          points: -30,
+          feedback: "ERROR CRÍTICO: Los bancos NUNCA piden CVV.",
+          trackFlag: "Solicitud de CVV (NUNCA legítima por teléfono)"
         },
         {
-          text: "No, prefiero verificar. Adiós.",
+          text: "Un momento... el banco nunca pide el CVV. Cuelgo.",
           next: "safe_ending",
-          points: 30,
-          feedback: "¡PERFECTO! No cediste a la presión.",
-          trackFlag: "Resistencia a tácticas de urgencia"
-        },
-        {
-          text: "Ok, pero solo confirmo algunos datos, no todo",
-          next: "bank_data_request",
-          points: -5,
-          feedback: "Empiezas a ceder...",
-          trackFlag: "Concesión gradual bajo presión"
-        }
-      ]
-    },
-    bank_false_proof: {
-      title: "Prueba Falsa",
-      description: "Carlos: 'Excelente pregunta. Mi número de empleado es BS-4729. Puede ver que la llamada viene del 900-102-365, que es nuestro número oficial, ¿verdad? Además, tengo acceso a toda su información de cuenta, lo cual demuestra que soy legítimo. Si quiere, le puedo decir su saldo actual...'",
-      question: "¿Cómo procedes?",
-      options: [
-        {
-          text: "Ok, eso me convence. ¿Qué necesita?",
-          next: "bank_data_request",
-          points: -10,
-          feedback: "Te convencieron con pruebas falsas...",
-          trackFlag: "Spoofing telefónico + acceso a datos básicos"
-        },
-        {
-          text: "Aún así, voy a colgar y verificar llamando yo",
-          next: "safe_ending",
-          points: 30,
-          feedback: "¡EXCELENTE! No importa lo convincente que parezca.",
-          trackFlag: "Verificación independiente a pesar de 'pruebas'"
-        },
-        {
-          text: "Vale, dígame mi saldo entonces",
-          next: "bank_more_info",
-          points: 5,
-          feedback: "Sigues en la llamada...",
-          trackFlag: "Prolongación de la conversación"
+          points: 35,
+          feedback: "¡PERFECTO! Reconociste la red flag crítica.",
+          trackFlag: "Reconocimiento tardío pero efectivo"
         }
       ]
     },
@@ -283,27 +311,6 @@ const VishingSimulator = () => {
         }
       ]
     },
-    bank_cvv_request: {
-      title: "La Trampa Final",
-      description: "Carlos: 'Perfecto. Ahora, para completar el proceso de bloqueo, necesito el código de seguridad CVV. Es el número de tres dígitos de la parte trasera. Sin esto no puedo procesar la solicitud en el sistema.'",
-      question: "¿Qué haces?",
-      options: [
-        {
-          text: "Se lo doy para terminar con esto",
-          next: "compromised",
-          points: -30,
-          feedback: "ERROR CRÍTICO: Los bancos NUNCA piden CVV.",
-          trackFlag: "Solicitud de CVV (NUNCA legítima por teléfono)"
-        },
-        {
-          text: "Un momento... el banco nunca pide el CVV. Cuelgo.",
-          next: "safe_ending",
-          points: 35,
-          feedback: "¡PERFECTO! Reconociste la red flag crítica.",
-          trackFlag: "Reconocimiento tardío pero efectivo"
-        }
-      ]
-    },
     bank_insistence: {
       title: "Última Insistencia",
       description: "Carlos: 'Entiendo su preocupación, pero sin el CVV el sistema no me deja continuar. Es un campo obligatorio. Si no lo completamos ahora, los 2.450€ se cargarán automáticamente en 15 minutos. ¿Seguro que no quiere dar ese último dato? Solo son 3 dígitos...'",
@@ -325,24 +332,24 @@ const VishingSimulator = () => {
         }
       ]
     },
-    bank_more_info: {
-      title: "Más Información Personal",
-      description: "Carlos: 'Su saldo actual es de 1.247,83 euros. ¿Ve? Tengo acceso a todo. Ahora, para continuar con el bloqueo, necesito confirmar los datos de su tarjeta...'",
-      question: "¿Qué haces ahora?",
+    bank_false_proof: {
+      title: "Prueba Falsa",
+      description: "Carlos: 'Excelente pregunta. Mi número de empleado es BS-4729. Puede ver que la llamada viene del 900-102-365, que es nuestro número oficial, ¿verdad? Además, tengo acceso a toda su información de cuenta, lo cual demuestra que soy legítimo. Si quiere, le puedo decir su saldo actual...'",
+      question: "¿Cómo procedes?",
       options: [
         {
-          text: "Ok, ya me fío. ¿Qué datos necesita?",
+          text: "Ok, eso me convence. ¿Qué necesita?",
           next: "bank_data_request",
           points: -10,
-          feedback: "La información correcta te dio falsa confianza...",
-          trackFlag: "Datos bancarios básicos usados para credibilidad"
+          feedback: "Te convencieron con pruebas falsas...",
+          trackFlag: "Spoofing telefónico + acceso a datos básicos"
         },
         {
-          text: "Voy a verificar esto. Cuelgo y llamo yo al banco",
+          text: "Aún así, voy a colgar y verificar llamando yo",
           next: "safe_ending",
           points: 30,
-          feedback: "¡BIEN! Mantuviste tu decisión de verificar.",
-          trackFlag: "Persistencia en verificación independiente"
+          feedback: "¡EXCELENTE! No importa lo convincente que parezca.",
+          trackFlag: "Verificación independiente a pesar de 'pruebas'"
         }
       ]
     },
@@ -390,10 +397,10 @@ const VishingSimulator = () => {
         },
         {
           text: "Voy a contactar con mi servicio técnico local",
-          next: "safe_ending",
-          points: 30,
-          feedback: "¡BIEN! Verificación a través de fuentes confiables.",
-          trackFlag: "Buscar ayuda profesional conocida"
+          next: "tech_persistence1",
+          points: 20,
+          feedback: "Buscas verificación...",
+          trackFlag: "Búsqueda de verificación local"
         },
         {
           text: "¿Puede enviarme esto por email oficial de Microsoft?",
@@ -401,6 +408,27 @@ const VishingSimulator = () => {
           points: 15,
           feedback: "Pides documentación...",
           trackFlag: "Solicitud de comunicación oficial documentada"
+        }
+      ]
+    },
+    tech_persistence1: {
+      title: "Insistencia Técnica",
+      description: "Técnico: 'Su servicio técnico local no tiene acceso a los logs de Microsoft. Solo nosotros podemos ver la actividad maliciosa. Además, si espera, el virus se propagará a todos sus contactos y archivos. Ya ha infectado su sistema de banca online. CADA MINUTO cuenta. ¿Realmente quiere arriesgarse?'",
+      question: "¿Qué decides?",
+      options: [
+        {
+          text: "Tiene razón, ayúdeme ahora",
+          next: "tech_remote",
+          points: -15,
+          feedback: "La urgencia técnica funciona...",
+          trackFlag: "Urgencia técnica falsa"
+        },
+        {
+          text: "Prefiero arriesgarme. Voy a verificar primero.",
+          next: "safe_ending",
+          points: 30,
+          feedback: "¡BIEN! No cedes a presión técnica.",
+          trackFlag: "Resistencia a urgencia técnica"
         }
       ]
     },
@@ -497,12 +525,12 @@ const VishingSimulator = () => {
     },
     compromised_tech: {
       title: "💻 Sistema Comprometido",
-      description: "Le diste acceso remoto al atacante. Ahora tiene control total de tu ordenador. Puede ver tus contraseñas guardadas, instalar keyloggers, acceder a tus archivos, y robar tu información bancaria. El daño puede ser masivo.",
+      description: "Le diste acceso remoto al atacante. Ahora tiene control total de tu ordenador. Puede ver tus contraseñas guardadas, instalar keyloggers, acceder a tus archivos, y robar tu información bancaria. El daño puede ser masivo. Si esto hubiera sido en BEXEN, comprometería toda la red corporativa.",
       question: "Consecuencias:",
       options: [
         {
           text: "Ver resultados",
-          next: "results",
+          next: "compromised",
           points: 0,
           feedback: "Dar acceso remoto es uno de los errores más graves.",
           trackFlag: "Concesión de acceso remoto a atacante"
@@ -553,9 +581,9 @@ const VishingSimulator = () => {
         },
         {
           text: "Voy a ir personalmente a Hacienda mañana",
-          next: "safe_ending",
-          points: 30,
-          feedback: "¡BIEN! Verificación presencial es lo correcto.",
+          next: "tax_persistence1",
+          points: 20,
+          feedback: "Propones verificación presencial...",
           trackFlag: "Propuesta de gestión presencial"
         },
         {
@@ -564,6 +592,27 @@ const VishingSimulator = () => {
           points: 10,
           feedback: "Haces preguntas importantes...",
           trackFlag: "Cuestionamiento de procedimientos"
+        }
+      ]
+    },
+    tax_persistence1: {
+      title: "Insistencia Legal",
+      description: "Agente: 'Ir mañana será tarde. El embargo se ejecuta automáticamente a las 00:00 horas de esta noche. Una vez procesado, no se puede revertir y tardará meses en resolverse. Además, su empleador será notificado y eso afectará negativamente su situación laboral. ¿Seguro que quiere arriesgar su empleo y su solvencia crediticia?'",
+      question: "¿Qué decides?",
+      options: [
+        {
+          text: "No puedo arriesgar mi trabajo. Pago ahora.",
+          next: "tax_payment",
+          points: -20,
+          feedback: "La amenaza laboral funciona...",
+          trackFlag: "Amenaza de consecuencias laborales"
+        },
+        {
+          text: "Asumo el riesgo. Verificaré mañana en persona.",
+          next: "safe_ending",
+          points: 30,
+          feedback: "¡BIEN! Priorizas verificación sobre miedo.",
+          trackFlag: "Resistencia a amenazas legales"
         }
       ]
     },
@@ -653,9 +702,9 @@ const VishingSimulator = () => {
         },
         {
           text: "Espera, voy a llamar a tu madre ahora mismo",
-          next: "safe_ending",
-          points: 35,
-          feedback: "¡PERFECTO! Verificar con otros familiares es clave.",
+          next: "family_persistence1",
+          points: 25,
+          feedback: "Buscas verificar con otros familiares...",
           trackFlag: "Verificación con otros miembros de la familia"
         },
         {
@@ -692,6 +741,27 @@ const VishingSimulator = () => {
           points: 25,
           feedback: "Intentas verificar la identidad...",
           trackFlag: "Verificación de identidad del llamante"
+        }
+      ]
+    },
+    family_persistence1: {
+      title: "Manipulación Emocional",
+      description: "Voz: [Llorando] 'NO, abuela/o, por favor no llames a mamá. Ya bastante mal está que esté aquí. Si ella se entera va a venir y va a hacer un escándalo. El abogado dice que si pagamos ahora puedo salir en una hora y nadie tiene que saberlo. Pero si llamas a mamá, todo se complica. ¿No confías en mí? Soy tu nieto...'",
+      question: "¿Qué decides?",
+      options: [
+        {
+          text: "Tienes razón, no quiero que se preocupe. Te ayudo.",
+          next: "family_money",
+          points: -20,
+          feedback: "La manipulación emocional funciona...",
+          trackFlag: "Manipulación emocional con culpa"
+        },
+        {
+          text: "Precisamente porque te quiero, voy a llamar a tu madre.",
+          next: "safe_ending",
+          points: 35,
+          feedback: "¡PERFECTO! La verificación familiar es esencial.",
+          trackFlag: "Priorización de verificación sobre emoción"
         }
       ]
     },
@@ -753,7 +823,7 @@ const VishingSimulator = () => {
     },
     family_police: {
       title: "Bloqueo al Contacto",
-      description: "Voz molesta: 'No puedes hablar con ellos ahora, están ocupados. Mira, si no confías en mí, olvídalo. Supongo que prefie res que tu nieto vaya a prisión. Pensé que podía contar contigo...' [Cuelga]",
+      description: "Voz molesta: 'No puedes hablar con ellos ahora, están ocupados. Mira, si no confías en mí, olvídalo. Supongo que prefieres que tu nieto vaya a prisión. Pensé que podía contar contigo...' [Cuelga]",
       question: "¿Qué haces después de que cuelgue?",
       options: [
         {
@@ -787,15 +857,23 @@ const VishingSimulator = () => {
       ]
     },
     compromised_money: {
-      title: "💸 Dinero Perdido",
-      description: "Enviaste 3.000€ a un estafador. Tu familiar real está perfectamente bien. El dinero es irrecuperable. Los estafadores usaron ingeniería social y manipulación emocional. Siempre verifica con otros miembros de la familia antes de enviar dinero.",
+      title: "💸 Dinero Perdido - BEXEN en Peligro",
+      description: `Enviaste 3.000€ a un estafador. Tu familiar real está perfectamente bien. El dinero es irrecuperable. Los estafadores usaron ingeniería social y manipulación emocional.
+
+Si esto hubiera sido en BEXEN con una cuenta corporativa, las consecuencias habrían sido:
+• 3.000€ perdidos de fondos de empresa
+• Investigación interna sobre tu juicio
+• Posible responsabilidad laboral
+• Contribución al cierre de BEXEN si se suman más incidentes
+
+Las estafas familiares explotan nuestras emociones más profundas. SIEMPRE verifica con otros miembros de la familia antes de enviar dinero.`,
       question: "Lección aprendida:",
       options: [
         {
           text: "Ver resultados",
-          next: "results",
+          next: "compromised",
           points: 0,
-          feedback: "Las estafas familiares explotan nuestras emociones más profundas.",
+          feedback: "Las estafas emocionales son devastadoras tanto personal como profesionalmente.",
           trackFlag: "Pérdida monetaria por estafa emocional"
         }
       ]
@@ -844,9 +922,9 @@ const VishingSimulator = () => {
         },
         {
           text: "Voy a la oficina de Correos a pagar en persona",
-          next: "safe_ending",
-          points: 30,
-          feedback: "¡BIEN! Pago presencial es más seguro.",
+          next: "package_persistence1",
+          points: 20,
+          feedback: "Propones gestión presencial...",
           trackFlag: "Preferencia por gestión presencial"
         },
         {
@@ -855,6 +933,27 @@ const VishingSimulator = () => {
           points: 25,
           feedback: "Pides documentación oficial...",
           trackFlag: "Solicitud de comunicación oficial"
+        }
+      ]
+    },
+    package_persistence1: {
+      title: "Insistencia de Urgencia",
+      description: "Operador: 'La oficina más cercana está a 15km y cierra en 2 horas. Con el tráfico no le dará tiempo. Además, el paquete está en el almacén central y si no pagamos ahora, se devuelve automáticamente a las 18:00. Son solo 47,80€. ¿Seguro que prefiere perder el paquete por no pagar ahora?'",
+      question: "¿Qué decides?",
+      options: [
+        {
+          text: "Tiene razón, mejor pago ahora",
+          next: "package_payment",
+          points: -15,
+          feedback: "La logística convincente funciona...",
+          trackFlag: "Presión logística falsa"
+        },
+        {
+          text: "Prefiero arriesgarme. Iré a la oficina.",
+          next: "safe_ending",
+          points: 30,
+          feedback: "¡BIEN! Priorizas verificación presencial.",
+          trackFlag: "Persistencia en verificación presencial"
         }
       ]
     },
@@ -950,10 +1049,10 @@ const VishingSimulator = () => {
       ]
     },
 
-    // ==================== ESCENARIO 6: CEO FRAUD (CORPORATIVO) ====================
+    // ==================== ESCENARIO 6: CEO FRAUD (CORPORATIVO) - CON MÁXIMA INSISTENCIA ====================
     ceo_intro: {
       title: "📞 Llamada del Despacho del Director",
-      description: "Recibes una llamada. Identificador: 'Dir. General - Ext. 101'. Voz autoritaria pero cordial: 'Hola, soy Roberto Mendoza, el Director General. Disculpa que te llame directamente, pero estoy en el aeropuerto camino a una reunión con inversores y necesito tu ayuda urgente con un tema delicado. ¿Tienes un momento? Es importante.'",
+      description: "Recibes una llamada. Identificador: 'Dir. General BEXEN - Ext. 101'. Voz autoritaria pero cordial: 'Hola, soy Roberto Mendoza, el Director General de BEXEN. Disculpa que te llame directamente, pero estoy en el aeropuerto camino a una reunión con inversores y necesito tu ayuda urgente con un tema delicado. ¿Tienes un momento? Es importante y confidencial.'",
       question: "¿Cómo respondes?",
       options: [
         {
@@ -972,16 +1071,37 @@ const VishingSimulator = () => {
         },
         {
           text: "Con todo respeto, voy a colgar y llamar a su asistente para confirmar",
-          next: "safe_ending",
-          points: 35,
-          feedback: "¡PERFECTO! Verificación a través de canales oficiales.",
-          trackFlag: "Verificación correcta ante solicitud inusual"
+          next: "ceo_persistence1",
+          points: 25,
+          feedback: "Buscas verificación oficial...",
+          trackFlag: "Verificación a través de canales oficiales"
+        }
+      ]
+    },
+    ceo_persistence1: {
+      title: "Primera Barrera - Insistencia Profesional",
+      description: "Roberto: 'Aprecio tu precaución, de verdad. Pero mi asistente está en una reunión con el CFO precisamente sobre este tema y no puede ser interrumpida. Por eso te llamo directamente. Mira, esto es EXTREMADAMENTE confidencial - estamos cerrando la adquisición de TechCorp y NADIE puede saberlo aún. Si filtras esto, perdemos el trato de 5 millones. ¿Puedo confiar en tu discreción?'",
+      question: "¿Qué respondes?",
+      options: [
+        {
+          text: "Por supuesto, Director. Cuente conmigo.",
+          next: "ceo_urgent",
+          points: -10,
+          feedback: "La confidencialidad te convenció...",
+          trackFlag: "Confidencialidad usada para evitar verificación"
+        },
+        {
+          text: "Entiendo, pero aún así prefiero verificar por otro canal",
+          next: "ceo_anger",
+          points: 30,
+          feedback: "Mantienes tu posición...",
+          trackFlag: "Resistencia a autoridad nivel 1"
         }
       ]
     },
     ceo_urgent: {
       title: "La Situación Urgente",
-      description: "Roberto: 'Gracias. Mira, estamos cerrando una adquisición confidencial de una empresa competidora. NADIE puede saberlo aún, ni siquiera el CFO - lo sabrá mañana. Necesito que hagas una transferencia de 45.000€ hoy mismo a la cuenta de nuestros asesores legales en Suiza. Es para pagar honorarios del due diligence. Si no se paga hoy, perdemos el trato y meses de trabajo.'",
+      description: "Roberto: 'Gracias. Como te decía, estamos cerrando la adquisición de TechCorp - nuestra competencia. NADIE puede saberlo, ni siquiera el CFO lo sabe aún. Necesito que hagas una transferencia de 45.000€ HOY MISMO a la cuenta de nuestros asesores legales en Suiza. Es para pagar honorarios del due diligence. Si no se paga en las próximas 3 horas, perdemos el trato y 8 meses de negociaciones. ¿Entiendes la gravedad?'",
       question: "Tu respuesta:",
       options: [
         {
@@ -1008,36 +1128,106 @@ const VishingSimulator = () => {
       ]
     },
     ceo_pressure: {
-      title: "Presión con Profesionalidad",
-      description: "Roberto: 'Entiendo tu precaución, es lo correcto. Pero estoy literalmente embarcando en 10 minutos y mi móvil corporativo está sin batería - por eso llamo desde el fijo del lounge VIP del aeropuerto. Mira, si quieres verificar, llama a mi asistente María... aunque está en reunión y no podrá atender hasta en 2 horas. Para entonces ya habré perdido el trato de 2 millones. ¿Confías en mí o no?'",
+      title: "Segunda Barrera - Presión Profesional Escalada",
+      description: "Roberto: 'Entiendo tu precaución, realmente lo entiendo. Pero estoy literalmente embarcando en 10 minutos y mi móvil corporativo está sin batería - por eso llamo desde el fijo del lounge VIP. Mira, si quieres verificar, llama a mi asistente María... aunque está en reunión hasta las 4 PM. Para entonces ya habré perdido el trato de 5 millones y 35 puestos de trabajo que íbamos a crear. Así que te pregunto directamente: ¿Confías en tu CEO o no?'",
       question: "¿Qué decides?",
       options: [
         {
-          text: "Tiene razón, confío. Dígame qué hacer.",
+          text: "Sí, confío. Haré la transferencia.",
           next: "ceo_account",
-          points: -15,
-          feedback: "La presión profesional funciona...",
-          trackFlag: "Presión emocional con urgencia temporal"
+          points: -20,
+          feedback: "La presión de autoridad funcionó...",
+          trackFlag: "Confianza mal ubicada en figura de autoridad"
         },
         {
-          text: "Prefiero esperar las 2 horas y verificar. Lo siento.",
-          next: "safe_ending",
-          points: 30,
-          feedback: "¡BIEN! No cedes ante presión de autoridad.",
-          trackFlag: "Resistencia a presión de figura de autoridad"
+          text: "Prefiero esperar y verificar con María en 2 horas",
+          next: "ceo_anger",
+          points: 15,
+          feedback: "Resistes la presión, pero viene más...",
+          trackFlag: "Resistencia a presión de autoridad nivel 1"
         },
         {
-          text: "Le envío un email para tener todo documentado",
-          next: "ceo_no_email",
+          text: "Llamaré a otro ejecutivo para confirmar",
+          next: "ceo_confidential_extreme",
           points: 20,
-          feedback: "Buscas dejar rastro escrito...",
-          trackFlag: "Intento de documentación de solicitud"
+          feedback: "Buscas verificación alternativa...",
+          trackFlag: "Búsqueda de verificación independiente"
+        }
+      ]
+    },
+    ceo_anger: {
+      title: "Tercera Barrera - Frustración y Manipulación",
+      description: "Roberto: [Tono de frustración] 'En serio? Mira, llevo 15 años construyendo BEXEN desde CERO. ¿Y ahora me dices que prefieres 'esperar 2 horas' mientras pierdo 5 millones de euros y destruyo 8 meses de trabajo? ¿Sabes cuántas empresas han quebrado porque la gente prefirió 'seguir protocolos' en lugar de tomar decisiones? Te estoy dando la oportunidad de ser parte del mayor crecimiento de BEXEN. O me ayudas AHORA o busco a alguien que SÍ quiera el futuro de esta empresa. ¿Qué decides?'",
+      question: "Tu respuesta:",
+      options: [
+        {
+          text: "Tiene razón, lo haré ahora",
+          next: "ceo_account",
+          points: -25,
+          feedback: "La manipulación emocional te venció...",
+          trackFlag: "Manipulación emocional exitosa"
+        },
+        {
+          text: "Entiendo su frustración, pero debo verificar. Es mi responsabilidad.",
+          next: "ceo_threat",
+          points: 25,
+          feedback: "Resistes incluso bajo presión extrema...",
+          trackFlag: "Resistencia a presión de autoridad nivel 2"
+        }
+      ]
+    },
+    ceo_threat: {
+      title: "Cuarta Barrera - Amenaza Profesional Directa",
+      description: "Roberto: [Voz fría] 'Tu responsabilidad... Interesante concepto. Mira, tomo nota de tu 'inflexibilidad' y tu falta de visión empresarial. Cuando tengamos que hacer recortes de personal el próximo trimestre - y los habrá si perdemos este trato - recordaré EXACTAMENTE quién estuvo dispuesto a ayudar a salvar BEXEN y quién prefirió esconderse detrás de 'procedimientos'. Tu decisión de hoy puede costarte MÁS que un trabajo, puede costar 35 empleos. Última oportunidad: ¿me ayudas o no?'",
+      question: "Decisión crítica:",
+      options: [
+        {
+          text: "No quiero arriesgar mi trabajo ni el de otros. Haré la transferencia.",
+          next: "ceo_account",
+          points: -30,
+          feedback: "La amenaza laboral te intimidó...",
+          trackFlag: "Intimidación laboral efectiva"
+        },
+        {
+          text: "Lo siento, pero no puedo. Esto no es correcto.",
+          next: "ceo_final_threat",
+          points: 30,
+          feedback: "Mantienes tu posición incluso ante amenazas...",
+          trackFlag: "Resistencia a intimidación laboral"
+        }
+      ]
+    },
+    ceo_final_threat: {
+      title: "Quinta Barrera - Última Manipulación Extrema",
+      description: "Roberto: [Explosión de ira] '¿CORRECTO? ¿Me estás diciendo a MÍ lo que es correcto? Yo FUNDÉ BEXEN. Yo firmo TU nómina. Yo decidí CONTRATARTE. Y tú te atreves a cuestionarme? Sabes qué, perfecto. Ya sé exactamente con quién cuento y con quién NO. Espera la llamada de RRHH esta tarde. Y cuando BEXEN pierda el trato y tengamos que despedir a 35 personas, que sepan que fue por TU inflexibilidad.' [CUELGA BRUSCAMENTE]",
+      question: "¿Qué haces ahora?",
+      options: [
+        {
+          text: "Me asusto y le llamo de vuelta para hacer la transferencia",
+          next: "ceo_account",
+          points: -35,
+          feedback: "El miedo extremo te hizo ceder...",
+          trackFlag: "Intimidación extrema funciona"
+        },
+        {
+          text: "Llamar inmediatamente al Director REAL o a RRHH para reportar esto",
+          next: "ceo_verification_success",
+          points: 40,
+          feedback: "¡PERFECTO! Reportaste el intento de fraude.",
+          trackFlag: "Reporte exitoso de CEO Fraud - Héroe de BEXEN"
+        },
+        {
+          text: "Quedarme preocupado pero no hacer nada",
+          next: "safe_ending",
+          points: 20,
+          feedback: "Resististe, pero debiste reportarlo inmediatamente.",
+          trackFlag: "Resistencia sin reporte"
         }
       ]
     },
     ceo_confidential: {
       title: "Confidencialidad Extrema",
-      description: "Roberto: 'Mira, aprecio tu profesionalidad, pero esto es ESTRICTAMENTE CONFIDENCIAL. Si llamas a Finanzas, todo el edificio lo sabrá en una hora. Tenemos un topo filtrando info a la competencia - por eso te llamo a TI, porque confío en ti. Si filtras esto, perdemos millones y habría consecuencias legales graves. ¿Prefieres arriesgar tu carrera por seguir un protocolo o ayudar a la empresa?'",
+      description: "Roberto: 'Mira, aprecio tu profesionalidad, pero esto es ESTRICTAMENTE CONFIDENCIAL. Si llamas a Finanzas, todo el edificio lo sabrá en una hora y la noticia llegará a TechCorp. Tenemos un TOPO en BEXEN filtrando información a la competencia - por eso te llamo a ti directamente, porque eres de los pocos en quien confío. Si filtras esto, perdemos millones y habrá consecuencias legales graves para quien filtre. ¿Prefieres arriesgar tu carrera por seguir un protocolo o ayudar a BEXEN?'",
       question: "¿Cómo actúas?",
       options: [
         {
@@ -1049,7 +1239,7 @@ const VishingSimulator = () => {
         },
         {
           text: "Precisamente por confidencialidad debo verificar. Cuelgo.",
-          next: "safe_ending",
+          next: "ceo_verification_success",
           points: 35,
           feedback: "¡PERFECTO! No cedes a intimidación.",
           trackFlag: "Reconocimiento de táctica de intimidación"
@@ -1058,7 +1248,7 @@ const VishingSimulator = () => {
     },
     ceo_bypass: {
       title: "Bypass de Procesos",
-      description: "Roberto: 'Los procesos normales tardan 3-5 días. No tenemos ese tiempo. ¿Sabes cuánto vale este trato? 2 millones de euros. ¿Y sabes qué pasa si lo perdemos por burocracia? Despidos. Este es el tipo de flexibilidad que separa a empleados valiosos de empleados promedio. Tú decides en qué categoría quieres estar.'",
+      description: "Roberto: 'Los procesos normales tardan 3-5 días laborables. No tenemos ese tiempo. ¿Sabes cuánto vale este trato? 5 millones de euros y 35 nuevos empleos. ¿Y sabes qué pasa si lo perdemos por burocracia? Despidos masivos. Este es el tipo de flexibilidad que separa a empleados VALIOSOS de empleados promedio. Los que ascienden en BEXEN son los que saben cuándo actuar. Tú decides en qué categoría quieres estar.'",
       question: "Tu decisión:",
       options: [
         {
@@ -1069,118 +1259,243 @@ const VishingSimulator = () => {
           trackFlag: "Violación de protocolos bajo presión de autoridad"
         },
         {
-          text: "Lo siento, pero no puedo saltarme los controles. Es mi responsabilidad.",
-          next: "safe_ending",
-          points: 35,
-          feedback: "¡EXCELENTE! Priorizas seguridad sobre presión.",
+          text: "Lo siento, pero no puedo saltarme los controles. Es mi responsabilidad con BEXEN.",
+          next: "ceo_threat",
+          points: 25,
+          feedback: "Priorizas seguridad sobre presión...",
           trackFlag: "Protección de controles de seguridad"
         }
       ]
     },
-    ceo_no_email: {
-      title: "Evitar Rastro Escrito",
-      description: "Roberto: 'NO. Nada por email. Te acabo de explicar que hay un topo. Si envías un email, se filtra y perdemos todo. Esta es una operación verbal únicamente. Confío en tu criterio y discreción. Si no confías en mí, dilo ahora y buscaré a alguien más confiable. Tu elección.'",
-      question: "¿Qué haces?",
+    ceo_confidential_extreme: {
+      title: "Aislamiento y Confidencialidad",
+      description: "Roberto: '¿Llamar a OTRO ejecutivo? ¿Es que no me has escuchado? Te acabo de decir que esto es ESTRICTAMENTE CONFIDENCIAL. Tenemos un TOPO en BEXEN filtrando información a TechCorp. Por eso te llamo a TI, porque pensé que eras de confianza y discreto. Si llamas a alguien más, TODO el edificio lo sabrá en 30 minutos, TechCorp se enterará y perdemos el trato. ¿Realmente quieres ser responsable de eso? 35 familias y sus empleos dependen de tu discreción AHORA MISMO.'",
+      question: "¿Cómo actúas?",
       options: [
         {
-          text: "Entendido, sin email. Procedo con la transferencia.",
+          text: "Entiendo. Mantengo la confidencialidad y ayudo.",
           next: "ceo_account",
-          points: -20,
-          feedback: "Aceptas operar sin documentación...",
-          trackFlag: "Operación financiera sin documentación"
+          points: -25,
+          feedback: "El aislamiento funcionó...",
+          trackFlag: "Táctica de aislamiento exitosa"
         },
         {
-          text: "Sin documentación escrita, no puedo proceder. Lo siento.",
-          next: "safe_ending",
-          points: 35,
-          feedback: "¡PERFECTO! Documentación es esencial.",
-          trackFlag: "Insistencia en documentación adecuada"
+          text: "Precisamente por eso debo verificar. Si hay un topo, más razón para ser cuidadoso.",
+          next: "ceo_threat",
+          points: 30,
+          feedback: "Usas lógica contra la manipulación...",
+          trackFlag: "Lógica supera manipulación emocional"
         }
       ]
     },
     ceo_account: {
       title: "Los Detalles Bancarios",
-      description: "Roberto: 'Perfecto, sabía que podía contar contigo. La cuenta es: IBAN CH76 0483 5012 3456 7800 9. Titular: 'LexCorp Advisory SA'. Concepto: 'Honorarios Q4'. Exactamente 45.000€. Hazlo en los próximos 30 minutos y llámame a este número cuando esté hecho. Ah, y por supuesto, ni una palabra a nadie hasta mañana. Gracias por tu profesionalidad.' [Cuelga]",
-      question: "Tu decisión final:",
+      description: "Roberto: 'Perfecto, sabía que podía contar contigo. Serás recompensado cuando cerremos el trato. La cuenta es: IBAN CH76 0483 5012 3456 7800 9. Titular: 'LexCorp Advisory SA'. Concepto: 'Honorarios Due Diligence Q4'. Exactamente 45.000€. Hazlo en los próximos 30 minutos máximo y llámame a este número cuando esté hecho. Ah, y por supuesto, ni una palabra a nadie hasta que yo anuncie oficialmente el lunes. Gracias por tu profesionalidad y lealtad a BEXEN.' [Cuelga]",
+      question: "Tu decisión FINAL:",
       options: [
         {
           text: "Hacer la transferencia inmediatamente",
           next: "compromised_corporate",
           points: -35,
-          feedback: "ERROR CRÍTICO: Nunca hagas transferencias sin verificar.",
-          trackFlag: "Transferencia fraudulenta sin verificación (CEO Fraud)"
+          feedback: "ERROR CRÍTICO: BEXEN pierde 45.000€.",
+          trackFlag: "Transferencia fraudulenta ejecutada - CEO Fraud exitoso"
         },
         {
           text: "Espera... algo no cuadra. Voy a verificar antes de hacer nada.",
           next: "ceo_verification",
           points: 30,
-          feedback: "¡BIEN! Tu instinto te alerta.",
+          feedback: "¡BIEN! Tu instinto te alerta en el último momento.",
           trackFlag: "Detección tardía de banderas rojas"
         },
         {
           text: "Llamar inmediatamente al Director REAL para confirmar",
-          next: "safe_ending",
+          next: "ceo_verification_success",
           points: 35,
           feedback: "¡EXCELENTE! Verificación final antes de actuar.",
-          trackFlag: "Verificación final salvó la situación"
+          trackFlag: "Verificación final salvó a BEXEN"
         }
       ]
     },
     ceo_verification: {
-      title: "Verificación Crítica",
-      description: "Llamas al número directo del Director General que tienes en el directorio corporativo. Su asistente responde: 'El Director Mendoza está en la oficina en reunión, ¿quién llama?' Le explicas la situación. Respuesta: 'Eso es imposible. El Director NO está de viaje y NUNCA pediría transferencias así. Esto es fraude. Voy a alertar a Seguridad inmediatamente.'",
+      title: "Verificación de Último Momento",
+      description: "Llamas al número directo del Director General que tienes en el directorio corporativo de BEXEN. Su asistente responde: 'El Director Mendoza está en su oficina en reunión ahora mismo, ¿quién llama?' Le explicas la situación de la transferencia urgente. Respuesta: 'Eso es IMPOSIBLE. El Director NO está de viaje, está aquí. NUNCA pediría transferencias así. Esto es un intento de FRAUDE. Voy a alertar a Seguridad de BEXEN inmediatamente. Has salvado a la empresa.'",
       question: "Resultado:",
       options: [
         {
-          text: "Ver resultados",
+          text: "Ver resultados - Reportar el incidente",
           next: "safe_ending",
           points: 25,
-          feedback: "¡Evitaste un CEO Fraud! Tu verificación salvó 45.000€ a la empresa.",
-          trackFlag: "CEO Fraud evitado mediante verificación"
+          feedback: "¡Evitaste un CEO Fraud! Tu verificación salvó 45.000€ a BEXEN.",
+          trackFlag: "CEO Fraud evitado mediante verificación de último momento"
+        }
+      ]
+    },
+    ceo_verification_success: {
+      title: "🏆 Héroe de BEXEN - Has Salvado la Empresa",
+      description: `Llamas al número directo del Director Mendoza que tienes en el directorio. Su asistente responde sorprendida: 'El Director está en su oficina ahora mismo, nunca salió de viaje. Esto es un intento de fraude grave. ¡Has salvado a BEXEN de una pérdida catastrófica!'
+
+Al día siguiente recibes:
+• Email personal del Director REAL agradeciéndote
+• Reconocimiento en la reunión general de empresa
+• Mención en el boletín interno de seguridad de BEXEN
+
+Tu vigilancia evitó:
+✅ Pérdida de 45.000€
+✅ Posibles consecuencias legales
+✅ Daño a la reputación de BEXEN
+✅ Investigación interna costosa
+
+Además, tu reporte permitió a Seguridad alertar a otros empleados sobre esta modalidad de ataque.
+
+ERES UN AUTÉNTICO HÉROE DE LA CIBERSEGURIDAD EN BEXEN.`,
+      question: "",
+      options: [
+        {
+          text: "Ver resultados completos",
+          next: "safe_ending",
+          points: 15,
+          feedback: "¡Eres un héroe de BEXEN! Tu reporte salvó la empresa y ayudó a proteger a otros.",
+          trackFlag: "CEO Fraud evitado Y reportado - Máxima puntuación - Héroe BEXEN"
         }
       ]
     },
     compromised_corporate: {
-      title: "💼 Fraude Corporativo Exitoso",
-      description: "Realizaste la transferencia de 45.000€. Al día siguiente descubres que fue un fraude. No era el Director General. Los atacantes investigaron la empresa, conocían nombres, jerarquías, y hasta el número de extensión de directorio. El dinero fue enviado a una cuenta en Suiza y luego dispersado. Es irrecuperable. Habrá investigación interna, posibles consecuencias laborales y un caso con las autoridades que durará meses. El CEO Fraud es uno de los ataques más costosos y sofisticados contra empresas.",
-      question: "Lección aprendida:",
+      title: "💼 BEXEN Ha Sido Víctima de CEO Fraud",
+      description: `Realizaste la transferencia de 45.000€ a los atacantes.
+
+📉 CONSECUENCIAS INMEDIATAS:
+• 45.000€ irrecuperables (enviados a Suiza, luego dispersados)
+• Investigación interna sobre tu juicio profesional
+• Tu puesto de trabajo en riesgo grave
+• Posibles consecuencias legales personales
+• Revisión de todos los procedimientos de seguridad
+
+Este ataque, sumado a otros incidentes similares en BEXEN causados por empleados que cayeron en vishing, ha resultado en:
+
+❌ BEXEN CIERRA SUS PUERTAS DEFINITIVAMENTE:
+• Pérdida total acumulada: 450.000€
+• Multas regulatorias: 200.000€
+• Pérdida de contratos: 1.2M€
+• 124 empleados sin trabajo (incluido tú)
+• Empresa con 15 años de historia DESAPARECE
+• Reputación destruida irreparablemente
+
+💔 El CEO Fraud es devastador para empresas.
+
+Casos reales:
+• Leoni AG (Alemania): 40 millones € perdidos
+• FACC (Austria): 42 millones € + CEO despedido
+• Mattel (USA): 3 millones $ (detectado a tiempo)
+
+BEXEN no tuvo la misma suerte.
+
+NUNCA hagas transferencias sin verificar por múltiples canales.
+NUNCA saltees protocolos bajo presión.
+SIEMPRE documenta solicitudes inusuales.
+SIEMPRE verifica con otros departamentos.`,
+      question: "¿Qué harás diferente si tuvieras otra oportunidad?",
       options: [
         {
-          text: "Ver mis resultados",
-          next: "results",
+          text: "Ver análisis de mis errores fatales",
+          next: "compromised",
           points: 0,
-          feedback: "El CEO Fraud causó pérdidas graves. SIEMPRE verifica solicitudes financieras inusuales.",
-          trackFlag: "Víctima de CEO Fraud - 45.000€ perdidos"
+          feedback: "El CEO Fraud destruyó BEXEN. La verificación habría salvado todo.",
+          trackFlag: "CEO Fraud exitoso - BEXEN cerrada - 45.000€ perdidos"
         }
       ]
     },
 
-    // ==================== FINALES ====================
+    // ==================== FINALES PERSONALIZADOS BEXEN ====================
     compromised: {
-      title: "💔 Información Comprometida",
-      description: "Proporcionaste datos sensibles al atacante. Ahora tienen acceso a tu información bancaria y pueden realizar cargos fraudulentos. Deberás llamar a tu banco, bloquear la tarjeta, y vigilar tus cuentas durante meses. El proceso será estresante y largo.",
-      question: "Lección aprendida:",
+      title: "💔 BEXEN Ya No Existe",
+      description: `Proporcionaste datos sensibles o realizaste acciones que comprometieron la seguridad de BEXEN.
+
+Debido a que empleados como tú cayeron en ataques similares de vishing, las consecuencias han sido catastróficas:
+
+📉 IMPACTO DEL CIBERATAQUE EN BEXEN:
+• Pérdida acumulada: 450.000€ en transferencias fraudulentas
+• Filtración de datos de 12.000 clientes
+• Multas regulatorias (GDPR): 200.000€
+• Pérdida de contratos principales: 1.200.000€
+• Daño irreparable a 15 años de reputación empresarial
+
+💼 CONSECUENCIAS LABORALES Y SOCIALES:
+• BEXEN cesa operaciones definitivamente
+• 124 empleados pierden su trabajo HOY
+• Proveedores sin cobrar facturas pendientes
+• Familias enteras afectadas económicamente
+• Empleados deben buscar nuevo trabajo en un mercado difícil
+
+⚖️ CONSECUENCIAS LEGALES:
+• Investigación judicial en curso
+• Responsabilidad civil de directivos y empleados involucrados
+• Demandas masivas de clientes afectados
+• Antecedentes laborales negativos
+
+❌ BEXEN ha cerrado sus puertas para siempre.
+La empresa donde trabajabas ya no existe.
+
+------------------------
+
+⚠️ NOTA IMPORTANTE: Este es un escenario SIMULADO, pero las consecuencias SON REALES para miles de empresas cada año.
+
+🔴 DATOS REALES DE CIBERATAQUES:
+• 60% de PYMEs cierran en los 6 meses siguientes a un ciberataque grave
+• Coste medio de un ataque de vishing para empresas: 180.000€
+• 95% de brechas de seguridad tienen un componente de error humano
+• El CEO Fraud es el ataque más costoso (48.000€ de media por incidente)
+
+TU DECISIÓN CUENTA.
+Cada llamada. Cada email. Cada clic. Cada transferencia.
+Eres el eslabón que protege o el que rompe la cadena.
+
+LA CIBERSEGURIDAD NO ES OPCIONAL EN BEXEN.
+Es responsabilidad de CADA empleado, CADA día.`,
+      question: "¿Qué harás diferente a partir de ahora?",
       options: [
         {
-          text: "Ver mis resultados",
+          text: "Ver análisis detallado de mis errores",
           next: "results",
           points: 0,
-          feedback: "En la vida real, recuperar tu seguridad puede llevar meses.",
-          trackFlag: "Datos bancarios comprometidos"
+          feedback: "En la vida real, BEXEN no tendría segunda oportunidad. Aprende de esta experiencia simulada.",
+          trackFlag: "Cierre de BEXEN - Lección crítica aprendida"
         }
       ]
     },
     safe_ending: {
-      title: "🛡️ ¡Protegido!",
-      description: "Has evitado el ataque exitosamente. Tomaste decisiones inteligentes y protegiste tu información. El atacante buscará a otra víctima más vulnerable. Tu precaución te ha salvado.",
+      title: "🎊 ¡FELICIDADES - Has Protegido a BEXEN! 🎊",
+      description: `Has evitado el ataque exitosamente. Tomaste decisiones inteligentes bajo presión y protegiste tu información y la de BEXEN.
+
+✅ BEXEN SIGUE OPERANDO gracias a empleados como tú
+✅ Nuestros 124 empleados mantienen sus puestos de trabajo
+✅ Nuestras 124 familias están seguras
+✅ Nuestros 12.000 clientes están protegidos
+✅ Nuestros datos permanecen seguros
+✅ La reputación de BEXEN de 15 años permanece intacta
+✅ La solvencia financiera está asegurada
+
+Tu vigilancia y pensamiento crítico han salvado potencialmente:
+💰 Hasta 450.000€ en posibles pérdidas por fraudes
+🛡️ Datos personales de 12.000 clientes
+🏢 15 años de reputación empresarial
+💼 124 puestos de trabajo
+
+Desde BEXEN queremos AGRADECERTE por:
+• Completar esta formación con éxito y seriedad
+• Demostrar pensamiento crítico bajo presión extrema
+• Ser parte activa de nuestra primera línea de defensa
+• Proteger el futuro de todos en BEXEN
+
+Tu vigilancia es exactamente lo que necesitamos en nuestra empresa.
+ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
       question: "",
       options: [
         {
-          text: "Ver mis resultados",
+          text: "Ver recomendaciones y análisis completo",
           next: "results",
           points: 10,
-          feedback: "¡Excelente trabajo! Has demostrado pensamiento crítico.",
-          trackFlag: "Ataque evitado exitosamente"
+          feedback: "¡Excelente trabajo! Tu pensamiento crítico protege a BEXEN cada día.",
+          trackFlag: "Ataque evitado - BEXEN protegida - Empleado ejemplar"
         }
       ]
     }
@@ -1190,12 +1505,10 @@ const VishingSimulator = () => {
     const newScore = score + option.points;
     setScore(newScore);
     
-    // Track scenario type
     if (option.scenario) {
       setScenarioType(option.scenario);
     }
     
-    // Track red flags if present
     if (option.trackFlag) {
       trackRedFlag(option.trackFlag);
     }
@@ -1229,71 +1542,286 @@ const VishingSimulator = () => {
   };
 
   const getFinalMessage = (finalScore) => {
-    if (finalScore >= 60) {
+    if (finalScore >= 80) {
       return {
-        title: "🏆 Experto en Seguridad",
-        message: "¡Excelente! Has tomado las mejores decisiones. Sabes identificar y evitar ataques de vishing.",
-        color: "text-green-600"
+        title: "🏆 Experto en Seguridad - Pilar de BEXEN",
+        message: "¡Excepcional! Eres exactamente el tipo de empleado que mantiene a BEXEN segura. Tu vigilancia es ejemplar.",
+        color: "text-green-600",
+        showConfetti: true
       };
-    } else if (finalScore >= 30) {
+    } else if (finalScore >= 60) {
       return {
-        title: "✅ Bien Protegido",
-        message: "Buen trabajo. Tomaste decisiones mayormente correctas, pero siempre hay margen de mejora.",
-        color: "text-blue-600"
+        title: "✅ BEXEN Está Segura Contigo",
+        message: "Buen trabajo. Has demostrado pensamiento crítico y protección de la empresa. Sigue así.",
+        color: "text-blue-600",
+        showConfetti: true
       };
-    } else if (finalScore >= 0) {
+    } else if (finalScore >= 40) {
       return {
-        title: "⚠️ En Riesgo",
-        message: "Algunas decisiones te pusieron en peligro. Repasa las señales de alerta.",
-        color: "text-yellow-600"
+        title: "⚠️ En Riesgo - Refuerza tu Formación",
+        message: "Algunas decisiones fueron peligrosas. BEXEN necesita que mejores tu vigilancia urgentemente.",
+        color: "text-yellow-600",
+        showConfetti: false
       };
     } else {
       return {
-        title: "🚨 Comprometido",
-        message: "Las decisiones tomadas resultaron en una brecha de seguridad. ¡Aprende de este ejercicio!",
-        color: "text-red-600"
+        title: "🚨 BEXEN Ha Cerrado - Desastre Total",
+        message: "Las decisiones como las tuyas han causado el cierre definitivo de BEXEN. 124 empleados sin trabajo.",
+        color: "text-red-600",
+        showConfetti: false
       };
     }
   };
 
+  // Efecto de confeti para puntuaciones exitosas
+  useEffect(() => {
+    if (stage === 'results' && score >= 60 && typeof window.confetti !== 'undefined') {
+      const duration = 4000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+      function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+        
+        window.confetti(Object.assign({}, defaults, {
+          particleCount,
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+        }));
+        
+        window.confetti(Object.assign({}, defaults, {
+          particleCount,
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+        }));
+      }, 250);
+
+      return () => clearInterval(interval);
+    }
+  }, [stage, score]);
+
   if (stage === 'results') {
     const finalMessage = getFinalMessage(score);
+    const isBexenClosed = score < 60;
+    
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-2xl shadow-2xl p-8">
+            
+            {/* MENSAJE BEXEN - ÉXITO O FRACASO */}
+            {isBexenClosed ? (
+              // MENSAJE DE FRACASO - BEXEN CERRADA
+              <div className="bg-gradient-to-r from-red-600 to-red-800 text-white rounded-xl p-8 mb-8 animate-pulse">
+                <div className="text-center">
+                  <div className="text-7xl mb-4">💔</div>
+                  <h2 className="text-5xl font-bold mb-4">BEXEN Ha Cerrado</h2>
+                  <p className="text-2xl mb-6 font-semibold">Gracias por participar, pero...</p>
+                </div>
+                <div className="bg-red-900 bg-opacity-50 rounded-lg p-6 mb-6">
+                  <p className="text-lg leading-relaxed mb-6">
+                    Debido a que empleados como tú cayeron en ataques de vishing similares, 
+                    BEXEN ha sufrido consecuencias devastadoras que han forzado el <strong>cierre definitivo</strong> de la empresa.
+                  </p>
+                  <div className="space-y-4 text-left">
+                    <div className="flex items-start gap-3 bg-black bg-opacity-20 p-4 rounded">
+                      <span className="text-3xl">📉</span>
+                      <div>
+                        <p className="font-bold text-xl">Pérdidas Económicas:</p>
+                        <p className="text-lg">450.000€ en fraudes + 200.000€ multas GDPR + 1.2M€ contratos perdidos</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 bg-black bg-opacity-20 p-4 rounded">
+                      <span className="text-3xl">👥</span>
+                      <div>
+                        <p className="font-bold text-xl">Impacto Laboral:</p>
+                        <p className="text-lg">124 empleados pierden su puesto de trabajo HOY</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 bg-black bg-opacity-20 p-4 rounded">
+                      <span className="text-3xl">🏢</span>
+                      <div>
+                        <p className="font-bold text-xl">Reputación:</p>
+                        <p className="text-lg">15 años de historia empresarial destruidos permanentemente</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 bg-black bg-opacity-20 p-4 rounded">
+                      <span className="text-3xl">⚖️</span>
+                      <div>
+                        <p className="font-bold text-xl">Consecuencias Legales:</p>
+                        <p className="text-lg">Demandas de 12.000 clientes afectados + Investigación judicial</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-black bg-opacity-40 rounded-lg p-6 text-center border-4 border-red-300">
+                  <p className="text-3xl font-bold mb-3">❌ BEXEN YA NO EXISTE ❌</p>
+                  <p className="text-base italic mb-4 opacity-90">
+                    [Este es un escenario simulado, pero las consecuencias son REALES 
+                    para miles de empresas cada año]
+                  </p>
+                  <div className="space-y-2 mt-4">
+                    <p className="text-xl font-bold">
+                      🔴 60% de PYMEs cierran tras un ciberataque grave
+                    </p>
+                    <p className="text-xl font-bold">
+                      🔴 95% de brechas tienen componente humano
+                    </p>
+                    <p className="text-2xl font-extrabold mt-4 text-yellow-300">
+                      LA CIBERSEGURIDAD NO ES OPCIONAL
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              // MENSAJE DE ÉXITO - BEXEN PROTEGIDA
+              <div className="bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 text-white rounded-xl p-8 mb-8 shadow-2xl">
+                <div className="text-center mb-6">
+                  <div className="text-7xl mb-4 animate-bounce">🎊</div>
+                  <h2 className="text-5xl font-bold mb-3">¡FELICIDADES!</h2>
+                  <p className="text-3xl font-semibold">Has Protegido a BEXEN</p>
+                </div>
+                <div className="bg-white bg-opacity-20 rounded-lg p-6 mb-6 backdrop-blur">
+                  <p className="text-xl leading-relaxed mb-6">
+                    Desde <strong>BEXEN</strong> queremos <strong className="text-yellow-300">AGRADECERTE</strong> por completar esta formación con éxito 
+                    y demostrar que eres parte de nuestra primera línea de defensa contra el cibercrimen.
+                  </p>
+                  <div className="grid md:grid-cols-2 gap-4 text-left">
+                    <div className="flex items-start gap-3 bg-green-700 bg-opacity-40 p-4 rounded-lg">
+                      <span className="text-4xl">✅</span>
+                      <div>
+                        <p className="font-bold text-lg">BEXEN sigue operando</p>
+                        <p className="text-sm">Gracias a empleados como tú</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 bg-green-700 bg-opacity-40 p-4 rounded-lg">
+                      <span className="text-4xl">👥</span>
+                      <div>
+                        <p className="font-bold text-lg">124 empleos protegidos</p>
+                        <p className="text-sm">Familias seguras</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 bg-green-700 bg-opacity-40 p-4 rounded-lg">
+                      <span className="text-4xl">🛡️</span>
+                      <div>
+                        <p className="font-bold text-lg">12.000 clientes seguros</p>
+                        <p className="text-sm">Datos protegidos</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 bg-green-700 bg-opacity-40 p-4 rounded-lg">
+                      <span className="text-4xl">💰</span>
+                      <div>
+                        <p className="font-bold text-lg">450.000€ salvados</p>
+                        <p className="text-sm">Pérdidas evitadas</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-green-900 bg-opacity-50 rounded-lg p-4 border-2 border-yellow-300">
+                  <p className="text-center text-2xl font-bold">
+                    🏆 Eres un Pilar de Seguridad en BEXEN 🏆
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* PUNTUACIÓN */}
             <div className="text-center mb-8">
               <Award className={`w-20 h-20 mx-auto mb-4 ${finalMessage.color}`} />
               <h2 className={`text-3xl font-bold mb-2 ${finalMessage.color}`}>
                 {finalMessage.title}
               </h2>
               <p className="text-xl text-gray-700 mb-4">{finalMessage.message}</p>
-              <div className="text-5xl font-bold text-gray-800">
-                Puntuación: {score} / 100
+              <div className={`text-6xl font-bold ${isBexenClosed ? 'text-red-600' : 'text-green-600'}`}>
+                {score} / 100 puntos
               </div>
             </div>
 
-            <div className="bg-slate-50 rounded-xl p-6 mb-6">
-              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            {/* RECOMENDACIONES DE BEXEN (solo si aprobó) */}
+            {!isBexenClosed && (
+              <div className="bg-gradient-to-r from-blue-50 to-green-50 border-l-4 border-blue-500 p-6 mb-6 rounded-r-xl shadow-lg">
+                <h3 className="text-2xl font-bold mb-4 text-blue-900 flex items-center gap-2">
+                  <Shield className="w-7 h-7" />
+                  💡 Recuerda en tu Día a Día en BEXEN:
+                </h3>
+                <ul className="space-y-3 text-gray-800">
+                  <li className="flex items-start gap-3 bg-white p-3 rounded-lg shadow-sm">
+                    <span className="text-blue-600 font-bold text-2xl">✓</span>
+                    <span className="text-lg">Verifica <strong>SIEMPRE</strong> llamadas sospechosas llamando tú a los números oficiales del directorio</span>
+                  </li>
+                  <li className="flex items-start gap-3 bg-white p-3 rounded-lg shadow-sm">
+                    <span className="text-blue-600 font-bold text-2xl">✓</span>
+                    <span className="text-lg"><strong>NUNCA</strong> des información sensible (contraseñas, CVV, datos bancarios) por teléfono</span>
+                  </li>
+                  <li className="flex items-start gap-3 bg-white p-3 rounded-lg shadow-sm">
+                    <span className="text-blue-600 font-bold text-2xl">✓</span>
+                    <span className="text-lg">La <strong>urgencia extrema</strong> es la táctica #1 de los ciberdelincuentes</span>
+                  </li>
+                  <li className="flex items-start gap-3 bg-white p-3 rounded-lg shadow-sm">
+                    <span className="text-blue-600 font-bold text-2xl">✓</span>
+                    <span className="text-lg">Si algo parece extraño, <strong>confía en tu instinto</strong> y verifica siempre</span>
+                  </li>
+                  <li className="flex items-start gap-3 bg-white p-3 rounded-lg shadow-sm">
+                    <span className="text-blue-600 font-bold text-2xl">✓</span>
+                    <span className="text-lg">Ninguna entidad legítima te presionará para saltarte protocolos de seguridad</span>
+                  </li>
+                  <li className="flex items-start gap-3 bg-white p-3 rounded-lg shadow-sm">
+                    <span className="text-blue-600 font-bold text-2xl">✓</span>
+                    <span className="text-lg"><strong>Documenta SIEMPRE</strong> solicitudes inusuales por escrito antes de actuar</span>
+                  </li>
+                  <li className="flex items-start gap-3 bg-white p-3 rounded-lg shadow-sm">
+                    <span className="text-blue-600 font-bold text-2xl">✓</span>
+                    <span className="text-lg">Ante dudas, consulta con tu supervisor o el departamento de Seguridad de BEXEN</span>
+                  </li>
+                </ul>
+                <div className="mt-6 bg-blue-600 text-white p-4 rounded-lg text-center">
+                  <p className="text-xl font-bold">
+                    🛡️ Juntos mantenemos a BEXEN segura 🛡️
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* TUS DECISIONES */}
+            <div className="bg-slate-50 rounded-xl p-6 mb-6 shadow-inner">
+              <h3 className="text-2xl font-semibold mb-4 flex items-center gap-2">
                 <Shield className="w-6 h-6 text-blue-600" />
-                Tus Decisiones:
+                Tus Decisiones Durante la Simulación:
               </h3>
               <div className="space-y-3">
                 {decisions.map((decision, index) => (
-                  <div key={index} className="flex items-start gap-3 bg-white p-3 rounded-lg">
+                  <div key={index} className={`flex items-start gap-3 p-4 rounded-lg border-2 ${
+                    decision.points > 0 ? 'bg-green-50 border-green-300' : 
+                    decision.points < 0 ? 'bg-red-50 border-red-300' : 
+                    'bg-gray-50 border-gray-300'
+                  }`}>
                     {decision.points > 0 ? (
-                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                      <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                    ) : decision.points < 0 ? (
+                      <XCircle className="w-6 h-6 text-red-500 flex-shrink-0 mt-1" />
                     ) : (
-                      <XCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-1" />
+                      <div className="w-6 h-6 flex-shrink-0 mt-1 text-gray-400">⚪</div>
                     )}
                     <div className="flex-1">
-                      <p className="font-medium text-gray-800">{decision.choice}</p>
-                      <p className="text-sm text-gray-600">
+                      <p className="font-semibold text-gray-800 text-lg">{decision.choice}</p>
+                      <p className={`text-sm font-medium ${
+                        decision.points > 0 ? 'text-green-700' : 
+                        decision.points < 0 ? 'text-red-700' : 
+                        'text-gray-600'
+                      }`}>
                         Puntos: {decision.points > 0 ? '+' : ''}{decision.points}
                       </p>
                       {decision.redFlag && (
-                        <p className="text-xs text-orange-600 mt-1">
-                          🚩 {decision.redFlag}
+                        <p className="text-sm text-orange-700 mt-2 bg-orange-100 p-2 rounded">
+                          🚩 <strong>Señal de alerta:</strong> {decision.redFlag}
                         </p>
                       )}
                     </div>
@@ -1302,109 +1830,139 @@ const VishingSimulator = () => {
               </div>
             </div>
 
-            {/* Red Flags Analysis */}
+            {/* RED FLAGS ENCONTRADAS */}
             {redFlagsEncountered.length > 0 && (
-              <div className="bg-red-50 border-l-4 border-red-500 p-6 mb-6">
-                <h3 className="text-xl font-semibold mb-3 text-red-900 flex items-center gap-2">
-                  <AlertTriangle className="w-6 h-6" />
+              <div className="bg-red-50 border-l-4 border-red-500 p-6 mb-6 rounded-r-xl shadow-lg">
+                <h3 className="text-2xl font-bold mb-4 text-red-900 flex items-center gap-2">
+                  <AlertTriangle className="w-7 h-7" />
                   🚩 Señales de Alerta que Encontraste:
                 </h3>
-                <ul className="space-y-2">
+                <div className="space-y-2">
                   {redFlagsEncountered.map((flag, index) => (
-                    <li key={index} className="text-red-700 flex items-start gap-2">
-                      <span className="text-red-500 font-bold mt-0.5">•</span>
-                      <span>{flag}</span>
-                    </li>
+                    <div key={index} className="flex items-start gap-3 bg-white p-3 rounded-lg">
+                      <span className="text-red-500 font-bold text-xl mt-0.5">•</span>
+                      <span className="text-gray-800 text-lg">{flag}</span>
+                    </div>
                   ))}
-                </ul>
-                <p className="text-sm text-red-800 mt-4 font-medium">
-                  💡 En la vida real, estas señales deberían haberte alertado inmediatamente.
-                </p>
+                </div>
+                <div className="mt-4 bg-red-600 text-white p-4 rounded-lg">
+                  <p className="font-semibold text-center text-lg">
+                    💡 En situaciones reales en BEXEN, estas señales deberían alertarte INMEDIATAMENTE
+                  </p>
+                </div>
               </div>
             )}
 
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-6">
-              <h3 className="text-xl font-semibold mb-3 text-blue-900">
-                🎓 Lecciones Clave del Vishing:
+            {/* LECCIONES CLAVE */}
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 p-6 mb-6 rounded-r-xl shadow-lg">
+              <h3 className="text-2xl font-bold mb-4 text-blue-900">
+                🎓 Lecciones Clave del Vishing para BEXEN:
               </h3>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold">✓</span>
-                  <span>Los bancos, Microsoft, Hacienda NUNCA llaman pidiendo datos sensibles</span>
+              <ul className="space-y-3 text-gray-800">
+                <li className="flex items-start gap-3 bg-white p-3 rounded-lg shadow-sm">
+                  <span className="text-blue-600 font-bold text-xl">✓</span>
+                  <span className="text-lg">Los bancos, Microsoft, Hacienda <strong>NUNCA</strong> llaman pidiendo datos sensibles</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold">✓</span>
-                  <span>NUNCA des CVV, PIN, contraseñas o acceso remoto por teléfono</span>
+                <li className="flex items-start gap-3 bg-white p-3 rounded-lg shadow-sm">
+                  <span className="text-blue-600 font-bold text-xl">✓</span>
+                  <span className="text-lg"><strong>NUNCA</strong> des CVV, PIN, contraseñas o acceso remoto por teléfono</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold">✓</span>
-                  <span>La urgencia artificial es la táctica #1 de manipulación</span>
+                <li className="flex items-start gap-3 bg-white p-3 rounded-lg shadow-sm">
+                  <span className="text-blue-600 font-bold text-xl">✓</span>
+                  <span className="text-lg">La <strong>urgencia artificial</strong> es la táctica #1 de manipulación</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold">✓</span>
-                  <span>Verifica SIEMPRE llamando tú al número oficial o visitando en persona</span>
+                <li className="flex items-start gap-3 bg-white p-3 rounded-lg shadow-sm">
+                  <span className="text-blue-600 font-bold text-xl">✓</span>
+                  <span className="text-lg">Verifica <strong>SIEMPRE</strong> llamando tú al número oficial del directorio</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold">✓</span>
-                  <span>El spoofing hace que números falsos parezcan reales</span>
+                <li className="flex items-start gap-3 bg-white p-3 rounded-lg shadow-sm">
+                  <span className="text-blue-600 font-bold text-xl">✓</span>
+                  <span className="text-lg">El <strong>spoofing</strong> hace que números falsos parezcan reales</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold">✓</span>
-                  <span>Las emergencias familiares deben verificarse con otros familiares</span>
+                <li className="flex items-start gap-3 bg-white p-3 rounded-lg shadow-sm">
+                  <span className="text-blue-600 font-bold text-xl">✓</span>
+                  <span className="text-lg">Las <strong>emergencias familiares</strong> deben verificarse con otros familiares siempre</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold">✓</span>
-                  <span>Los atacantes tienen información básica sobre ti (no prueba nada)</span>
+                <li className="flex items-start gap-3 bg-white p-3 rounded-lg shadow-sm">
+                  <span className="text-blue-600 font-bold text-xl">✓</span>
+                  <span className="text-lg">Los atacantes tienen <strong>información básica</strong> sobre ti (no prueba legitimidad)</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 font-bold">✓</span>
-                  <span>Colgar y verificar NUNCA es de mala educación</span>
+                <li className="flex items-start gap-3 bg-white p-3 rounded-lg shadow-sm">
+                  <span className="text-blue-600 font-bold text-xl">✓</span>
+                  <span className="text-lg"><strong>Colgar y verificar</strong> NUNCA es de mala educación - es responsabilidad</span>
                 </li>
               </ul>
             </div>
 
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-l-4 border-purple-500 p-6 mb-6">
-              <h3 className="text-xl font-semibold mb-3 text-purple-900 flex items-center gap-2">
-                <TrendingUp className="w-6 h-6" />
+            {/* POR QUÉ FUNCIONAN */}
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-l-4 border-purple-500 p-6 mb-6 rounded-r-xl shadow-lg">
+              <h3 className="text-2xl font-bold mb-4 text-purple-900 flex items-center gap-2">
+                <TrendingUp className="w-7 h-7" />
                 ¿Por qué Funcionan Estas Estafas?
               </h3>
-              <div className="space-y-3 text-gray-700">
-                <p className="flex items-start gap-2">
-                  <span className="text-purple-600 font-bold text-lg">→</span>
-                  <span><strong>Urgencia:</strong> Crear presión de tiempo cortocircuita tu pensamiento racional</span>
-                </p>
-                <p className="flex items-start gap-2">
-                  <span className="text-purple-600 font-bold text-lg">→</span>
-                  <span><strong>Miedo:</strong> Amenazas de pérdida o consecuencias legales nos hacen vulnerables</span>
-                </p>
-                <p className="flex items-start gap-2">
-                  <span className="text-purple-600 font-bold text-lg">→</span>
-                  <span><strong>Autoridad:</strong> Suplantación de entidades oficiales explota nuestra confianza</span>
-                </p>
-                <p className="flex items-start gap-2">
-                  <span className="text-purple-600 font-bold text-lg">→</span>
-                  <span><strong>Emoción:</strong> Los casos de familiares explotan nuestro instinto protector</span>
-                </p>
-                <p className="flex items-start gap-2">
-                  <span className="text-purple-600 font-bold text-lg">→</span>
-                  <span><strong>Información personal:</strong> Datos básicos nos dan falsa sensación de legitimidad</span>
-                </p>
+              <div className="space-y-4 text-gray-800">
+                <div className="flex items-start gap-3 bg-white p-4 rounded-lg shadow-sm">
+                  <span className="text-purple-600 font-bold text-2xl">→</span>
+                  <div>
+                    <p className="font-bold text-lg">Urgencia:</p>
+                    <p>Crear presión de tiempo cortocircuita tu pensamiento racional y te hace actuar sin verificar</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 bg-white p-4 rounded-lg shadow-sm">
+                  <span className="text-purple-600 font-bold text-2xl">→</span>
+                  <div>
+                    <p className="font-bold text-lg">Miedo:</p>
+                    <p>Amenazas de pérdida económica o consecuencias legales nos hacen vulnerables y desesperados</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 bg-white p-4 rounded-lg shadow-sm">
+                  <span className="text-purple-600 font-bold text-2xl">→</span>
+                  <div>
+                    <p className="font-bold text-lg">Autoridad:</p>
+                    <p>Suplantación de entidades oficiales o superiores explota nuestra confianza en jerarquías</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 bg-white p-4 rounded-lg shadow-sm">
+                  <span className="text-purple-600 font-bold text-2xl">→</span>
+                  <div>
+                    <p className="font-bold text-lg">Emoción:</p>
+                    <p>Casos de familiares en problemas explotan nuestro instinto protector más profundo</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 bg-white p-4 rounded-lg shadow-sm">
+                  <span className="text-purple-600 font-bold text-2xl">→</span>
+                  <div>
+                    <p className="font-bold text-lg">Información Personal:</p>
+                    <p>Datos básicos sobre nosotros nos dan falsa sensación de legitimidad del atacante</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="flex gap-4 justify-center">
+            {/* BOTONES DE ACCIÓN */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={restartSimulation}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors shadow-lg"
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 px-8 rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105 text-lg"
               >
                 🔄 Probar Otro Escenario
               </button>
               <button
                 onClick={() => window.print()}
-                className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors shadow-lg"
+                className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-4 px-8 rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105 text-lg"
               >
                 🖨️ Imprimir Resultados
               </button>
+            </div>
+
+            {/* FIRMA BEXEN */}
+            <div className="mt-8 text-center text-gray-600 border-t pt-6">
+              <p className="text-lg font-semibold text-blue-900">
+                Formación en Ciberseguridad - BEXEN
+              </p>
+              <p className="text-sm mt-2">
+                Protegiendo juntos el futuro de nuestra empresa
+              </p>
             </div>
           </div>
         </div>
@@ -1424,7 +1982,7 @@ const VishingSimulator = () => {
               <div className="flex items-center gap-3">
                 <Phone className="w-8 h-8" />
                 <div>
-                  <h1 className="text-2xl font-bold">Simulador de Vishing</h1>
+                  <h1 className="text-2xl font-bold">Simulador de Vishing - BEXEN</h1>
                   <p className="text-red-100">Formación en Ciberseguridad</p>
                 </div>
               </div>
@@ -1476,7 +2034,7 @@ const VishingSimulator = () => {
 
             <div className="flex items-center gap-2 text-sm text-gray-500 mt-6 bg-gray-50 p-3 rounded-lg">
               <Shield className="w-4 h-4" />
-              <p>Entorno seguro de aprendizaje. Toma tus decisiones como lo harías en la vida real.</p>
+              <p>Entorno seguro de aprendizaje BEXEN. Toma tus decisiones como lo harías en la vida real.</p>
             </div>
           </div>
         </div>
