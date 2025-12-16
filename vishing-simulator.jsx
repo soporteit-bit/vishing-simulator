@@ -16,6 +16,18 @@ const VishingSimulator = () => {
     }
   };
 
+  // COLORES CORPORATIVOS BEXEN
+  const bexenColors = {
+    primary: '#1e3a5f', // Azul oscuro BEXEN
+    secondary: '#2c5282', // Azul medio
+    accent: '#3182ce', // Azul claro
+    success: '#059669', // Verde
+    danger: '#dc2626', // Rojo
+    warning: '#f59e0b', // Naranja
+    light: '#f8fafc', // Gris muy claro
+    white: '#ffffff'
+  };
+
   const scenarios = {
     scenario_select: {
       title: "📱 Selecciona tu Escenario",
@@ -1157,7 +1169,7 @@ Las estafas familiares explotan nuestras emociones más profundas. SIEMPRE verif
     },
     ceo_anger: {
       title: "Tercera Barrera - Frustración y Manipulación",
-      description: "Roberto: [Tono de frustración] 'En serio? Mira, llevo 15 años construyendo BEXEN desde CERO. ¿Y ahora me dices que prefieres 'esperar 2 horas' mientras pierdo 5 millones de euros y destruyo 8 meses de trabajo? ¿Sabes cuántas empresas han quebrado porque la gente prefirió 'seguir protocolos' en lugar de tomar decisiones? Te estoy dando la oportunidad de ser parte del mayor crecimiento de BEXEN. O me ayudas AHORA o busco a alguien que SÍ quiera el futuro de esta empresa. ¿Qué decides?'",
+      description: "Roberto: [Tono de frustración] 'En serio? Mira, llevo 45 años construyendo BEXEN desde CERO. ¿Y ahora me dices que prefieres 'esperar 2 horas' mientras pierdo 5 millones de euros y destruyo 8 meses de trabajo? ¿Sabes cuántas empresas han quebrado porque la gente prefirió 'seguir protocolos' en lugar de tomar decisiones? Te estoy dando la oportunidad de ser parte del mayor crecimiento de BEXEN. O me ayudas AHORA o busco a alguien que SÍ quiera el futuro de esta empresa. ¿Qué decides?'",
       question: "Tu respuesta:",
       options: [
         {
@@ -1377,7 +1389,7 @@ Este ataque, sumado a otros incidentes similares en BEXEN causados por empleados
 • Multas regulatorias: 200.000€
 • Pérdida de contratos: 1.2M€
 • 124 empleados sin trabajo (incluido tú)
-• Empresa con 15 años de historia DESAPARECE
+• Empresa con 45 años de historia DESAPARECE
 • Reputación destruida irreparablemente
 
 💔 El CEO Fraud es devastador para empresas.
@@ -1414,10 +1426,10 @@ Debido a que empleados como tú cayeron en ataques similares de vishing, las con
 
 📉 IMPACTO DEL CIBERATAQUE EN BEXEN:
 • Pérdida acumulada: 450.000€ en transferencias fraudulentas
-• Filtración de datos de 12.000 clientes
+• Filtración de datos de cientos de clientes
 • Multas regulatorias (GDPR): 200.000€
 • Pérdida de contratos principales: 1.200.000€
-• Daño irreparable a 15 años de reputación empresarial
+• Daño irreparable a 45 años de reputación empresarial
 
 💼 CONSECUENCIAS LABORALES Y SOCIALES:
 • BEXEN cesa operaciones definitivamente
@@ -1469,15 +1481,15 @@ Es responsabilidad de CADA empleado, CADA día.`,
 ✅ BEXEN SIGUE OPERANDO gracias a empleados como tú
 ✅ Nuestros 124 empleados mantienen sus puestos de trabajo
 ✅ Nuestras 124 familias están seguras
-✅ Nuestros 12.000 clientes están protegidos
+✅ Nuestros cientos de clientes están protegidos
 ✅ Nuestros datos permanecen seguros
-✅ La reputación de BEXEN de 15 años permanece intacta
+✅ La reputación de BEXEN de 45 años permanece intacta
 ✅ La solvencia financiera está asegurada
 
 Tu vigilancia y pensamiento crítico han salvado potencialmente:
 💰 Hasta 450.000€ en posibles pérdidas por fraudes
-🛡️ Datos personales de 12.000 clientes
-🏢 15 años de reputación empresarial
+🛡️ Datos personales de cientos de clientes
+🏢 45 años de reputación empresarial
 💼 124 puestos de trabajo
 
 Desde BEXEN queremos AGRADECERTE por:
@@ -1546,28 +1558,28 @@ ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
       return {
         title: "🏆 Experto en Seguridad - Pilar de BEXEN",
         message: "¡Excepcional! Eres exactamente el tipo de empleado que mantiene a BEXEN segura. Tu vigilancia es ejemplar.",
-        color: "text-green-600",
+        color: "text-emerald-700",
         showConfetti: true
       };
     } else if (finalScore >= 60) {
       return {
         title: "✅ BEXEN Está Segura Contigo",
         message: "Buen trabajo. Has demostrado pensamiento crítico y protección de la empresa. Sigue así.",
-        color: "text-blue-600",
+        color: "text-blue-700",
         showConfetti: true
       };
     } else if (finalScore >= 40) {
       return {
         title: "⚠️ En Riesgo - Refuerza tu Formación",
         message: "Algunas decisiones fueron peligrosas. BEXEN necesita que mejores tu vigilancia urgentemente.",
-        color: "text-yellow-600",
+        color: "text-amber-600",
         showConfetti: false
       };
     } else {
       return {
         title: "🚨 BEXEN Ha Cerrado - Desastre Total",
         message: "Las decisiones como las tuyas han causado el cierre definitivo de BEXEN. 124 empleados sin trabajo.",
-        color: "text-red-600",
+        color: "text-red-700",
         showConfetti: false
       };
     }
@@ -1576,9 +1588,9 @@ ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
   // Efecto de confeti para puntuaciones exitosas
   useEffect(() => {
     if (stage === 'results' && score >= 60 && typeof window.confetti !== 'undefined') {
-      const duration = 4000;
+      const duration = 5000;
       const animationEnd = Date.now() + duration;
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+      const defaults = { startVelocity: 35, spread: 360, ticks: 70, zIndex: 9999 };
 
       function randomInRange(min, max) {
         return Math.random() * (max - min) + min;
@@ -1591,18 +1603,23 @@ ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
           return clearInterval(interval);
         }
 
-        const particleCount = 50 * (timeLeft / duration);
+        const particleCount = 60 * (timeLeft / duration);
+        
+        // Colores corporativos BEXEN
+        const colors = ['#1e3a5f', '#3182ce', '#059669', '#ffffff'];
         
         window.confetti(Object.assign({}, defaults, {
           particleCount,
-          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+          colors: colors
         }));
         
         window.confetti(Object.assign({}, defaults, {
           particleCount,
-          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+          colors: colors
         }));
-      }, 250);
+      }, 200);
 
       return () => clearInterval(interval);
     }
@@ -1613,14 +1630,28 @@ ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
     const isBexenClosed = score < 60;
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
+      <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)' }} className="p-8">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-2xl p-8">
+          <div className="bg-white rounded-3xl shadow-2xl p-8 border-t-8" style={{ borderTopColor: '#1e3a5f' }}>
             
             {/* MENSAJE BEXEN - ÉXITO O FRACASO */}
             {isBexenClosed ? (
-              // MENSAJE DE FRACASO - BEXEN CERRADA
-              <div className="bg-gradient-to-r from-red-600 to-red-800 text-white rounded-xl p-8 mb-8 animate-pulse">
+              // BANNER DE FRACASO - ANIMADO Y DRAMÁTICO
+              <div 
+                className="relative overflow-hidden rounded-2xl p-10 mb-10 text-white shadow-2xl transform hover:scale-[1.01] transition-all duration-300"
+                style={{ 
+                  background: 'linear-gradient(135deg, #991b1b 0%, #dc2626 50%, #ef4444 100%)',
+                  boxShadow: '0 25px 50px -12px rgba(220, 38, 38, 0.5)'
+                }}
+              >
+                {/* Patrón de fondo animado */}
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute inset-0" style={{
+                    backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.05) 35px, rgba(255,255,255,.05) 70px)'
+                  }}></div>
+                </div>
+                
+                <div className="relative z-10">
                 <div className="text-center">
                   <div className="text-7xl mb-4">💔</div>
                   <h2 className="text-5xl font-bold mb-4">BEXEN Ha Cerrado</h2>
@@ -1650,14 +1681,14 @@ ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
                       <span className="text-3xl">🏢</span>
                       <div>
                         <p className="font-bold text-xl">Reputación:</p>
-                        <p className="text-lg">15 años de historia empresarial destruidos permanentemente</p>
+                        <p className="text-lg">45 años de historia empresarial destruidos permanentemente</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3 bg-black bg-opacity-20 p-4 rounded">
                       <span className="text-3xl">⚖️</span>
                       <div>
                         <p className="font-bold text-xl">Consecuencias Legales:</p>
-                        <p className="text-lg">Demandas de 12.000 clientes afectados + Investigación judicial</p>
+                        <p className="text-lg">Demandas de cientos de clientes afectados + Investigación judicial</p>
                       </div>
                     </div>
                   </div>
@@ -1680,11 +1711,26 @@ ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
                     </p>
                   </div>
                 </div>
+                </div>
               </div>
             ) : (
-              // MENSAJE DE ÉXITO - BEXEN PROTEGIDA
-              <div className="bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 text-white rounded-xl p-8 mb-8 shadow-2xl">
-                <div className="text-center mb-6">
+              // BANNER DE ÉXITO - COLORIDO Y CELEBRATORIO
+              <div 
+                className="relative overflow-hidden rounded-2xl p-10 mb-10 text-white shadow-2xl transform hover:scale-[1.01] transition-all duration-300"
+                style={{ 
+                  background: 'linear-gradient(135deg, #1e3a5f 0%, #2c5282 50%, #3182ce 100%)',
+                  boxShadow: '0 25px 50px -12px rgba(30, 58, 95, 0.5)'
+                }}
+              >
+                {/* Patrón de fondo decorativo */}
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute inset-0" style={{
+                    backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px)'
+                  }}></div>
+                </div>
+                
+                <div className="relative z-10">
+                <div className="text-center mb-8">
                   <div className="text-7xl mb-4 animate-bounce">🎊</div>
                   <h2 className="text-5xl font-bold mb-3">¡FELICIDADES!</h2>
                   <p className="text-3xl font-semibold">Has Protegido a BEXEN</p>
@@ -1712,7 +1758,7 @@ ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
                     <div className="flex items-start gap-3 bg-green-700 bg-opacity-40 p-4 rounded-lg">
                       <span className="text-4xl">🛡️</span>
                       <div>
-                        <p className="font-bold text-lg">12.000 clientes seguros</p>
+                        <p className="font-bold text-lg">cientos de clientes seguros</p>
                         <p className="text-sm">Datos protegidos</p>
                       </div>
                     </div>
@@ -1729,6 +1775,7 @@ ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
                   <p className="text-center text-2xl font-bold">
                     🏆 Eres un Pilar de Seguridad en BEXEN 🏆
                   </p>
+                </div>
                 </div>
               </div>
             )}
@@ -1961,7 +2008,7 @@ ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
                 Formación en Ciberseguridad - BEXEN
               </p>
               <p className="text-sm mt-2">
-                Protegiendo juntos el futuro de nuestra empresa
+                Protegiendo juntos 45 años de excelencia
               </p>
             </div>
           </div>
@@ -1973,11 +2020,11 @@ ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
   const currentScenario = scenarios[stage];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-slate-50 p-8">
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-red-600 to-orange-600 text-white p-6">
+          <div className="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Phone className="w-8 h-8" />
