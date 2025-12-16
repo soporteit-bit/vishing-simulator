@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Simulador interactivo de Vishing para formación en ciberseguridad">
+  <meta name="keywords" content="vishing, ciberseguridad, phishing, formación, seguridad">
+  <title>Simulador de Vishing - Formación en Ciberseguridad</title>
+  
+  <!-- Favicon (opcional) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    #root {
+      min-height: 100vh;
+    }
+    
+    /* Loading animation */
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+      margin-top: 20px;
+      color: white;
+      font-size: 18px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <!-- Loading animation mientras carga React -->
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Cargando simulador...</p>
+    </div>
+  </div>
+  
+  <!-- React y ReactDOM desde CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
+  <!-- Script principal del simulador -->
+  <script type="module" src="/main.jsx"></script>
+</body>
+</html>
