@@ -2,13 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { AlertTriangle, Phone, Shield, XCircle, CheckCircle, Award, TrendingUp } from 'lucide-react';
 
 const VishingSimulator = () => {
-  const [stage, setStage] = useState('scenario_select');
+  const [stage, setStage] = useState('login');
   const [score, setScore] = useState(0);
   const [decisions, setDecisions] = useState([]);
   const [showFeedback, setShowFeedback] = useState(false);
   const [currentFeedback, setCurrentFeedback] = useState('');
   const [scenarioType, setScenarioType] = useState('');
   const [redFlagsEncountered, setRedFlagsEncountered] = useState([]);
+  
+  // NUEVOS ESTADOS PARA TRACKING
+  const [userName, setUserName] = useState('');
+  const [userResults, setUserResults] = useState({
+    bank: null,
+    tech: null,
+    tax: null,
+    family: null,
+    package: null,
+    ceo: null
+  });
+  const [inputName, setInputName] = useState('');
 
   const trackRedFlag = (flag) => {
     if (!redFlagsEncountered.includes(flag)) {
@@ -26,6 +38,106 @@ const VishingSimulator = () => {
     warning: '#f59e0b', // Naranja
     light: '#f8fafc', // Gris muy claro
     white: '#ffffff'
+  };
+
+  // MAPEO DE ESCENARIOS A CLAVES DE STORAGE
+  const scenarioToKey = {
+    'bank': 'bank',
+    'tech': 'tech',
+    'tax': 'tax',
+    'family': 'family',
+    'package': 'package',
+    'ceo': 'ceo'
+  };
+
+  const scenarioNames = {
+    'bank': 'Banco',
+    'tech': 'Soporte Técnico',
+    'tax': 'Agencia Tributaria',
+    'family': 'Familiar en Apuros',
+    'package': 'Empresa de Paquetería',
+    'ceo': 'CEO/Director'
+  };
+
+  // FUNCIONES DE STORAGE
+  const loadUserData = async (name) => {
+    try {
+      const normalizedName = name.toLowerCase().trim().replace(/\s+/g, '-');
+      
+      // Cargar resultados del usuario
+      const resultsKey = `results:${normalizedName}`;
+      const resultsData = await window.storage.get(resultsKey, true);
+      
+      if (resultsData) {
+        const parsedResults = JSON.parse(resultsData.value);
+        setUserResults(parsedResults);
+      }
+      
+      // Añadir usuario a la lista global si no existe
+      const userListData = await window.storage.get('admin:users-list', true);
+      let userList = userListData ? JSON.parse(userListData.value) : [];
+      
+      if (!userList.includes(normalizedName)) {
+        userList.push(normalizedName);
+        await window.storage.set('admin:users-list', JSON.stringify(userList), true);
+      }
+      
+      return true;
+    } catch (error) {
+      console.log('Usuario nuevo o error cargando datos:', error);
+      return false;
+    }
+  };
+
+  const saveUserResult = async (name, scenario, finalScore) => {
+    try {
+      const normalizedName = name.toLowerCase().trim().replace(/\s+/g, '-');
+      const resultsKey = `results:${normalizedName}`;
+      
+      // Cargar resultados existentes
+      let results = { ...userResults };
+      
+      // Guardar nuevo resultado
+      results[scenario] = {
+        completado: true,
+        score: finalScore,
+        fecha: new Date().toISOString()
+      };
+      
+      // Guardar en storage
+      await window.storage.set(resultsKey, JSON.stringify(results), true);
+      
+      // Actualizar estado local
+      setUserResults(results);
+      
+      return true;
+    } catch (error) {
+      console.error('Error guardando resultado:', error);
+      return false;
+    }
+  };
+
+  const handleLogin = async () => {
+    if (inputName.trim().length < 2) {
+      alert('Por favor ingresa un nombre válido (mínimo 2 caracteres)');
+      return;
+    }
+    
+    setUserName(inputName.trim());
+    await loadUserData(inputName.trim());
+    setStage('scenario_select');
+  };
+
+  const isScenarioCompleted = (scenario) => {
+    return userResults[scenario]?.completado || false;
+  };
+
+  const getScenarioScore = (scenario) => {
+    return userResults[scenario]?.score || null;
+  };
+
+  const getScenarioDate = (scenario) => {
+    return userResults[scenario]?.fecha || null;
   };
 
   const scenarios = {
@@ -1495,6 +1607,10 @@ SIEMPRE verifica con otros departamentos.`,
     setTimeout(() => {
       setShowFeedback(false);
       if (option.next === 'results') {
+        // GUARDAR RESULTADO DEL USUARIO
+        if (scenarioType && userName) {
+          saveUserResult(userName, scenarioType, newScore);
+        }
         setStage('results');
       } else {
         setStage(option.next);
@@ -1582,6 +1698,230 @@ SIEMPRE verifica con otros departamentos.`,
       return () => clearInterval(interval);
     }
   }, [stage, score]);
+
+  // PANTALLA DE LOGIN
+  if (stage === 'login') {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-8" style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #dbeafe 50%, #e0f2fe 100%)' }}>
+        <div className="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full border-t-8" style={{ borderTopColor: '#1e3a5f' }}>
+          <div className="text-center mb-8">
+            <Shield className="w-20 h-20 mx-auto mb-4" style={{ color: '#1e3a5f' }} />
+            <h1 className="text-4xl font-black mb-2" style={{ color: '#1e3a5f' }}>BEXEN</h1>
+            <p className="text-xl font-semibold text-gray-600">Formación en Ciberseguridad</p>
+          </div>
+
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
+              Bienvenido/a al Simulador de Vishing
+            </h2>
+            <p className="text-gray-600 text-center mb-6">
+              Por favor, ingresa tu nombre para comenzar. Tus resultados quedarán registrados.
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                Nombre completo:
+              </label>
+              <input
+                type="text"
+                value={inputName}
+                onChange={(e) => setInputName(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                placeholder="Ej: Juan Pérez"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none text-lg"
+                autoFocus
+              />
+            </div>
+
+            <button
+              onClick={handleLogin}
+              className="w-full text-white font-bold py-4 px-6 rounded-xl transition-all shadow-lg hover:shadow-2xl transform hover:scale-105 text-xl"
+              style={{ 
+                background: 'linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%)'
+              }}
+            >
+              Comenzar Formación
+            </button>
+          </div>
+
+          <div className="mt-8 p-4 bg-blue-50 rounded-xl border-l-4" style={{ borderLeftColor: '#1e3a5f' }}>
+            <p className="text-sm text-gray-700">
+              <strong>📊 Sistema de tracking:</strong> Cada escenario solo puede realizarse una vez. Tus resultados quedan guardados para evaluación.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // SELECTOR DE ESCENARIOS CON PROGRESO
+  if (stage === 'scenario_select') {
+    const scenariosData = [
+      { key: 'bank', icon: '🏦', title: 'Banco - Fraude Detectado' },
+      { key: 'tech', icon: '💻', title: 'Soporte Técnico' },
+      { key: 'tax', icon: '📋', title: 'Agencia Tributaria' },
+      { key: 'family', icon: '👨‍👩‍👦', title: 'Familiar en Apuros' },
+      { key: 'package', icon: '📦', title: 'Empresa de Paquetería' },
+      { key: 'ceo', icon: '💼', title: 'CEO/Director (Avanzado)' }
+    ];
+
+    const completedCount = scenariosData.filter(s => isScenarioCompleted(s.key)).length;
+    const totalScenarios = scenariosData.length;
+
+    return (
+      <div className="min-h-screen p-8" style={{ background: 'linear-gradient(135deg, #f0f9ff 0%, #dbeafe 50%, #e0f2fe 100%)' }}>
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white rounded-3xl shadow-2xl p-8 border-t-8" style={{ borderTopColor: '#1e3a5f' }}>
+            
+            {/* Header con info del usuario */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h1 className="text-3xl font-black" style={{ color: '#1e3a5f' }}>
+                    👤 {userName}
+                  </h1>
+                  <p className="text-gray-600 text-lg">Formación en Ciberseguridad BEXEN</p>
+                </div>
+                <div className="text-right">
+                  <div className="text-5xl font-black" style={{ color: '#1e3a5f' }}>
+                    {completedCount}/{totalScenarios}
+                  </div>
+                  <p className="text-sm text-gray-600">Escenarios</p>
+                </div>
+              </div>
+
+              {/* Barra de progreso */}
+              <div className="bg-gray-200 rounded-full h-4 overflow-hidden">
+                <div 
+                  className="h-full transition-all duration-500 rounded-full"
+                  style={{ 
+                    width: `${(completedCount / totalScenarios) * 100}%`,
+                    background: 'linear-gradient(90deg, #059669 0%, #10b981 100%)'
+                  }}
+                />
+              </div>
+              <p className="text-center mt-2 text-sm text-gray-600">
+                {completedCount === totalScenarios ? 
+                  '🎉 ¡Has completado toda la formación!' : 
+                  `${totalScenarios - completedCount} escenario${totalScenarios - completedCount !== 1 ? 's' : ''} pendiente${totalScenarios - completedCount !== 1 ? 's' : ''}`
+                }
+              </p>
+            </div>
+
+            {/* Lista de escenarios */}
+            <div className="space-y-4">
+              <h2 className="text-2xl font-bold mb-6" style={{ color: '#1e3a5f' }}>
+                Selecciona un escenario:
+              </h2>
+
+              {scenariosData.map((scenario) => {
+                const completed = isScenarioCompleted(scenario.key);
+                const scoreValue = getScenarioScore(scenario.key);
+                const dateValue = getScenarioDate(scenario.key);
+
+                return (
+                  <div
+                    key={scenario.key}
+                    className={`p-6 rounded-2xl border-3 transition-all ${
+                      completed 
+                        ? 'bg-gray-50 border-gray-300 opacity-75' 
+                        : 'bg-white border-gray-200 hover:border-blue-400 hover:shadow-lg cursor-pointer transform hover:scale-[1.02]'
+                    }`}
+                    style={{ borderWidth: '3px' }}
+                    onClick={() => {
+                      if (!completed) {
+                        // Resetear estados antes de empezar
+                        setScore(0);
+                        setDecisions([]);
+                        setRedFlagsEncountered([]);
+                        setScenarioType(scenario.key);
+                        
+                        // Ir al intro correspondiente
+                        const intros = {
+                          'bank': 'bank_intro',
+                          'tech': 'tech_intro',
+                          'tax': 'tax_intro',
+                          'family': 'family_intro',
+                          'package': 'package_intro',
+                          'ceo': 'ceo_intro'
+                        };
+                        setStage(intros[scenario.key]);
+                      }
+                    }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4 flex-1">
+                        <div className="text-5xl">{scenario.icon}</div>
+                        <div className="flex-1">
+                          <h3 className="text-xl font-bold text-gray-800 mb-1">
+                            {scenario.title}
+                          </h3>
+                          {completed ? (
+                            <div className="space-y-1">
+                              <p className="text-green-600 font-semibold flex items-center gap-2">
+                                <CheckCircle className="w-5 h-5" />
+                                Completado: {scoreValue} puntos
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                {new Date(dateValue).toLocaleDateString('es-ES', { 
+                                  day: '2-digit', 
+                                  month: 'short', 
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </p>
+                            </div>
+                          ) : (
+                            <p className="text-blue-600 font-semibold">
+                              🔓 Disponible - Haz clic para empezar
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {completed ? (
+                        <div className="flex items-center gap-2 px-4 py-2 bg-gray-200 rounded-lg">
+                          <XCircle className="w-5 h-5 text-gray-600" />
+                          <span className="font-bold text-gray-600">BLOQUEADO</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-lg text-white" style={{ backgroundColor: '#1e3a5f' }}>
+                          <span className="font-bold">REALIZAR</span>
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Nota importante */}
+            <div className="mt-8 p-6 rounded-xl border-l-4" style={{ 
+              backgroundColor: '#eff6ff', 
+              borderLeftColor: '#1e3a5f' 
+            }}>
+              <h3 className="font-bold text-gray-800 mb-2 flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5" style={{ color: '#1e3a5f' }} />
+                Importante:
+              </h3>
+              <ul className="space-y-1 text-gray-700">
+                <li>• Cada escenario solo puede realizarse <strong>una vez</strong></li>
+                <li>• Tus resultados quedan guardados automáticamente</li>
+                <li>• Tómate tu tiempo y piensa cada decisión</li>
+                <li>• El escenario CEO es el más difícil - hazlo al final</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (stage === 'results') {
     const finalMessage = getFinalMessage(score);
@@ -1950,7 +2290,7 @@ SIEMPRE verifica con otros departamentos.`,
                 onClick={restartSimulation}
                 className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 px-8 rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105 text-lg"
               >
-                🔄 Probar Otro Escenario
+                📋 Volver al Selector
               </button>
               <button
                 onClick={() => window.print()}
