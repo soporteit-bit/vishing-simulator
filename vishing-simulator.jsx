@@ -71,6 +71,19 @@ const VishingSimulator = () => {
       if (resultsData) {
         const parsedResults = JSON.parse(resultsData.value);
         setUserResults(parsedResults);
+        console.log('Datos cargados para', name, ':', parsedResults);
+      } else {
+        // Usuario nuevo - inicializar estructura vacía
+        const emptyResults = {
+          bank: null,
+          tech: null,
+          tax: null,
+          family: null,
+          package: null,
+          ceo: null
+        };
+        setUserResults(emptyResults);
+        console.log('Usuario nuevo:', name, '- Inicializando resultados vacíos');
       }
       
       // Añadir usuario a la lista global si no existe
@@ -84,7 +97,16 @@ const VishingSimulator = () => {
       
       return true;
     } catch (error) {
-      console.log('Usuario nuevo o error cargando datos:', error);
+      console.log('Error cargando datos del usuario:', error);
+      // En caso de error, inicializar vacío
+      setUserResults({
+        bank: null,
+        tech: null,
+        tax: null,
+        family: null,
+        package: null,
+        ceo: null
+      });
       return false;
     }
   };
@@ -94,8 +116,18 @@ const VishingSimulator = () => {
       const normalizedName = name.toLowerCase().trim().replace(/\s+/g, '-');
       const resultsKey = `results:${normalizedName}`;
       
-      // Cargar resultados existentes
-      let results = { ...userResults };
+      console.log('Guardando resultado:', { name, scenario, finalScore });
+      
+      // Cargar resultados existentes desde storage primero
+      const existingData = await window.storage.get(resultsKey, true);
+      let results = existingData ? JSON.parse(existingData.value) : {
+        bank: null,
+        tech: null,
+        tax: null,
+        family: null,
+        package: null,
+        ceo: null
+      };
       
       // Guardar nuevo resultado
       results[scenario] = {
@@ -104,15 +136,19 @@ const VishingSimulator = () => {
         fecha: new Date().toISOString()
       };
       
+      console.log('Resultados actualizados:', results);
+      
       // Guardar en storage
       await window.storage.set(resultsKey, JSON.stringify(results), true);
+      console.log('✅ Guardado en storage exitoso');
       
       // Actualizar estado local
       setUserResults(results);
+      console.log('✅ Estado local actualizado');
       
       return true;
     } catch (error) {
-      console.error('Error guardando resultado:', error);
+      console.error('❌ Error guardando resultado:', error);
       return false;
     }
   };
@@ -129,7 +165,9 @@ const VishingSimulator = () => {
   };
 
   const isScenarioCompleted = (scenario) => {
-    return userResults[scenario]?.completado || false;
+    const completed = userResults[scenario]?.completado || false;
+    console.log(`¿Escenario ${scenario} completado?`, completed, 'userResults:', userResults);
+    return completed;
   };
 
   const getScenarioScore = (scenario) => {
@@ -1572,7 +1610,7 @@ SIEMPRE verifica con otros departamentos.`,
     // ==================== FINALES PERSONALIZADOS BEXEN ====================
   };
 
-  const handleChoice = (option) => {
+  const handleChoice = async (option) => {
     let newScore = score + option.points;
     
     // Sistema de Puntuación Garantizada (excepto CEO)
@@ -1604,12 +1642,14 @@ SIEMPRE verifica con otros departamentos.`,
     setCurrentFeedback(option.feedback);
     setShowFeedback(true);
     
-    setTimeout(() => {
+    setTimeout(async () => {
       setShowFeedback(false);
       if (option.next === 'results') {
-        // GUARDAR RESULTADO DEL USUARIO
+        // GUARDAR RESULTADO DEL USUARIO (ESPERAR A QUE TERMINE)
         if (scenarioType && userName) {
-          saveUserResult(userName, scenarioType, newScore);
+          console.log('Intentando guardar resultado...');
+          await saveUserResult(userName, scenarioType, newScore);
+          console.log('Resultado guardado, mostrando pantalla de resultados');
         }
         setStage('results');
       } else {
@@ -1618,13 +1658,21 @@ SIEMPRE verifica con otros departamentos.`,
     }, 2500);
   };
 
-  const restartSimulation = () => {
-    setStage('scenario_select');
+  const restartSimulation = async () => {
+    // Resetear estados del escenario
     setScore(0);
     setDecisions([]);
     setShowFeedback(false);
     setScenarioType('');
     setRedFlagsEncountered([]);
+    
+    // IMPORTANTE: Recargar datos del usuario para actualizar escenarios completados
+    if (userName) {
+      await loadUserData(userName);
+    }
+    
+    // Volver al selector
+    setStage('scenario_select');
   };
 
   const getFinalMessage = (finalScore) => {
