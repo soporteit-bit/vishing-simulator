@@ -93,7 +93,8 @@ const VishingSimulator = () => {
         },
         {
           text: "Ignorar y llamar tú al banco después",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡EXCELENTE! Verificar llamando tú es la mejor práctica.",
           trackFlag: "Spoofing de número telefónico"
@@ -218,7 +219,8 @@ const VishingSimulator = () => {
         },
         {
           text: "No. Cuelgo y llamo yo al banco. Adiós.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 35,
           feedback: "¡PERFECTO! Resististe toda la presión.",
           trackFlag: "Resistencia completa - Héroe bancario"
@@ -239,7 +241,8 @@ const VishingSimulator = () => {
         },
         {
           text: "Colgar y llamar al número oficial del banco",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡PERFECTO! Identificaste que algo no cuadra.",
           trackFlag: "Verificación independiente realizada"
@@ -260,14 +263,16 @@ const VishingSimulator = () => {
       options: [
         {
           text: "Le doy toda la información para resolver esto rápido",
-          next: "compromised",
+          next: "results",
+            forceMaxScore: 35, // Garantiza fracaso
           points: -25,
           feedback: "ERROR CRÍTICO: Nunca des CVV por teléfono.",
           trackFlag: "Solicitud de CVV por teléfono (RED FLAG CRÍTICA)"
         },
         {
           text: "Espera, el banco nunca pide el CVV. Cuelgo.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 35,
           feedback: "¡EXCELENTE! Identificaste la red flag más importante.",
           trackFlag: "Reconocimiento de solicitud fraudulenta de CVV"
@@ -288,14 +293,16 @@ const VishingSimulator = () => {
       options: [
         {
           text: "Se lo doy para terminar con esto",
-          next: "compromised",
+          next: "results",
+            forceMaxScore: 35, // Garantiza fracaso
           points: -30,
           feedback: "ERROR CRÍTICO: Los bancos NUNCA piden CVV.",
           trackFlag: "Solicitud de CVV (NUNCA legítima por teléfono)"
         },
         {
           text: "Un momento... el banco nunca pide el CVV. Cuelgo.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 35,
           feedback: "¡PERFECTO! Reconociste la red flag crítica.",
           trackFlag: "Reconocimiento tardío pero efectivo"
@@ -316,7 +323,8 @@ const VishingSimulator = () => {
         },
         {
           text: "No me convence. Prefiero colgar y llamar yo",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡BIEN! Tu instinto te salvó.",
           trackFlag: "Confianza en el instinto ante explicaciones dudosas"
@@ -330,14 +338,16 @@ const VishingSimulator = () => {
       options: [
         {
           text: "Está bien, se lo doy",
-          next: "compromised",
+          next: "results",
+            forceMaxScore: 35, // Garantiza fracaso
           points: -25,
           feedback: "Cediste a la presión final.",
           trackFlag: "Presión extrema de tiempo límite"
         },
         {
           text: "No. Cuelgo ahora mismo.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡BIEN! Resististe hasta el final.",
           trackFlag: "Resistencia exitosa a presión extrema"
@@ -358,7 +368,8 @@ const VishingSimulator = () => {
         },
         {
           text: "Aún así, voy a colgar y verificar llamando yo",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡EXCELENTE! No importa lo convincente que parezca.",
           trackFlag: "Verificación independiente a pesar de 'pruebas'"
@@ -381,7 +392,8 @@ const VishingSimulator = () => {
         },
         {
           text: "Microsoft nunca llama así. Cuelgo.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 35,
           feedback: "¡PERFECTO! Microsoft nunca llama proactivamente.",
           trackFlag: "Reconocimiento inmediato de táctica fraudulenta"
@@ -437,7 +449,8 @@ const VishingSimulator = () => {
         },
         {
           text: "Prefiero arriesgarme. Voy a verificar primero.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡BIEN! No cedes a presión técnica.",
           trackFlag: "Resistencia a urgencia técnica"
@@ -458,7 +471,8 @@ const VishingSimulator = () => {
         },
         {
           text: "Voy a verificar esto en la web de Microsoft. Adiós.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡PERFECTO! Siempre verifica información sospechosa.",
           trackFlag: "Verificación en fuentes oficiales"
@@ -479,7 +493,8 @@ const VishingSimulator = () => {
         },
         {
           text: "No voy a dar acceso a mi ordenador. Cuelgo.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 35,
           feedback: "¡EXCELENTE! Nunca des control de tu equipo.",
           trackFlag: "Rechazo a acceso remoto no autorizado"
@@ -507,7 +522,8 @@ const VishingSimulator = () => {
         },
         {
           text: "Prefiero esperar el email. Gracias y adiós.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡BIEN! No cediste a la presión temporal.",
           trackFlag: "Priorización de procedimientos oficiales"
@@ -521,14 +537,16 @@ const VishingSimulator = () => {
       options: [
         {
           text: "Ok, le doy los datos de la tarjeta",
-          next: "compromised",
+          next: "results",
+            forceMaxScore: 35, // Garantiza fracaso
           points: -25,
           feedback: "ERROR: Nunca pagues en llamadas no solicitadas.",
           trackFlag: "Solicitud de pago inmediato + falsa urgencia"
         },
         {
           text: "No voy a pagar nada. Cuelgo.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡PERFECTO! Nunca pagues en estas situaciones.",
           trackFlag: "Rechazo a pagos no verificados"
@@ -542,7 +560,8 @@ const VishingSimulator = () => {
       options: [
         {
           text: "Ver resultados",
-          next: "compromised",
+          next: "results",
+            forceMaxScore: 35, // Garantiza fracaso
           points: 0,
           feedback: "Dar acceso remoto es uno de los errores más graves.",
           trackFlag: "Concesión de acceso remoto a atacante"
@@ -565,7 +584,8 @@ const VishingSimulator = () => {
         },
         {
           text: "Hacienda no llama así. Envían cartas. Cuelgo.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 35,
           feedback: "¡PERFECTO! Hacienda usa notificaciones escritas.",
           trackFlag: "Conocimiento de procedimientos oficiales"
@@ -621,7 +641,8 @@ const VishingSimulator = () => {
         },
         {
           text: "Asumo el riesgo. Verificaré mañana en persona.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡BIEN! Priorizas verificación sobre miedo.",
           trackFlag: "Resistencia a amenazas legales"
@@ -642,7 +663,8 @@ const VishingSimulator = () => {
         },
         {
           text: "Voy a verificar el expediente online primero. Adiós.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡PERFECTO! Siempre verifica antes de pagar.",
           trackFlag: "Verificación independiente antes de pagar"
@@ -663,7 +685,8 @@ const VishingSimulator = () => {
         },
         {
           text: "Esto no me cuadra. Voy a verificarlo. Cuelgo.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡BIEN! Tu instinto te protegió.",
           trackFlag: "Confianza en instinto ante presiones"
@@ -677,21 +700,24 @@ const VishingSimulator = () => {
       options: [
         {
           text: "Le doy los datos de la tarjeta",
-          next: "compromised",
+          next: "results",
+            forceMaxScore: 35, // Garantiza fracaso
           points: -30,
           feedback: "ERROR: Hacienda nunca cobra por teléfono así.",
           trackFlag: "Solicitud de pago con tarjeta por teléfono"
         },
         {
           text: "¿Paysafecard? Eso no es normal. Cuelgo.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 35,
           feedback: "¡EXCELENTE! Hacienda nunca pide Paysafecard.",
           trackFlag: "Solicitud de pago con método no rastreable"
         },
         {
           text: "Voy a pagar en la web oficial de Hacienda",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡BIEN! Usa siempre canales oficiales.",
           trackFlag: "Uso de canales oficiales de pago"
@@ -770,7 +796,8 @@ const VishingSimulator = () => {
         },
         {
           text: "Precisamente porque te quiero, voy a llamar a tu madre.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 35,
           feedback: "¡PERFECTO! La verificación familiar es esencial.",
           trackFlag: "Priorización de verificación sobre emoción"
@@ -791,7 +818,8 @@ const VishingSimulator = () => {
         },
         {
           text: "Algo no cuadra. Voy a llamar a tu madre primero.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 35,
           feedback: "¡BIEN! Siempre verifica con otros familiares.",
           trackFlag: "Verificación con familia real"
@@ -826,7 +854,8 @@ const VishingSimulator = () => {
         },
         {
           text: "Voy a llamar a tu madre ahora mismo",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡PERFECTO! Verificación familiar.",
           trackFlag: "Verificación independiente con familia"
@@ -840,7 +869,8 @@ const VishingSimulator = () => {
       options: [
         {
           text: "Llamo a mi hijo/hija para verificar",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 35,
           feedback: "¡PERFECTO! Verificaste con la familia real.",
           trackFlag: "Verificación post-llamada con familia"
@@ -861,7 +891,8 @@ const VishingSimulator = () => {
       options: [
         {
           text: "Ver resultados",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡EXCELENTE! La verificación personal funcionó.",
           trackFlag: "Verificación exitosa expone el fraude"
@@ -883,7 +914,8 @@ Las estafas familiares explotan nuestras emociones más profundas. SIEMPRE verif
       options: [
         {
           text: "Ver resultados",
-          next: "compromised",
+          next: "results",
+            forceMaxScore: 35, // Garantiza fracaso
           points: 0,
           feedback: "Las estafas emocionales son devastadoras tanto personal como profesionalmente.",
           trackFlag: "Pérdida monetaria por estafa emocional"
@@ -962,7 +994,8 @@ Las estafas familiares explotan nuestras emociones más profundas. SIEMPRE verif
         },
         {
           text: "Prefiero arriesgarme. Iré a la oficina.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡BIEN! Priorizas verificación presencial.",
           trackFlag: "Persistencia en verificación presencial"
@@ -983,7 +1016,8 @@ Las estafas familiares explotan nuestras emociones más profundas. SIEMPRE verif
         },
         {
           text: "Voy a revisar mi cuenta de Amazon primero",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡PERFECTO! Verificación en fuentes directas.",
           trackFlag: "Verificación en cuenta de comercio electrónico"
@@ -1004,7 +1038,8 @@ Las estafas familiares explotan nuestras emociones más profundas. SIEMPRE verif
         },
         {
           text: "Voy a comprobar el número en la web. Si es real, pagaré allí.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡PERFECTO! Verificación antes de pagar.",
           trackFlag: "Verificación del número de seguimiento"
@@ -1025,7 +1060,8 @@ Las estafas familiares explotan nuestras emociones más profundas. SIEMPRE verif
         },
         {
           text: "Si no hay email oficial, no pago. Adiós.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡BIEN! Sin documentación oficial, no procedes.",
           trackFlag: "Insistencia en procedimientos oficiales"
@@ -1039,21 +1075,24 @@ Las estafas familiares explotan nuestras emociones más profundas. SIEMPRE verif
       options: [
         {
           text: "Le doy los datos de la tarjeta",
-          next: "compromised",
+          next: "results",
+            forceMaxScore: 35, // Garantiza fracaso
           points: -25,
           feedback: "ERROR: Correos nunca cobra así por teléfono.",
           trackFlag: "Solicitud de datos de tarjeta por teléfono"
         },
         {
           text: "Correos no cobra por teléfono. Esto es fraude. Cuelgo.",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 35,
           feedback: "¡EXCELENTE! Reconociste el fraude.",
           trackFlag: "Reconocimiento de método de pago fraudulento"
         },
         {
           text: "Voy a pagar en la web oficial de Correos",
-          next: "safe_ending",
+          next: "results",
+            forceMinScore: 65, // Garantiza éxito
           points: 30,
           feedback: "¡BIEN! Solo usa canales oficiales.",
           trackFlag: "Uso de canal oficial de pago"
@@ -1230,7 +1269,7 @@ Las estafas familiares explotan nuestras emociones más profundas. SIEMPRE verif
         },
         {
           text: "Quedarme preocupado pero no hacer nada",
-          next: "safe_ending_ceo",
+          next: "results",
           points: 20,
           feedback: "Resististe, pero debiste reportarlo inmediatamente.",
           trackFlag: "Resistencia sin reporte"
@@ -1335,7 +1374,7 @@ Las estafas familiares explotan nuestras emociones más profundas. SIEMPRE verif
       options: [
         {
           text: "Ver resultados - Reportar el incidente",
-          next: "safe_ending_ceo",
+          next: "results",
           points: 25,
           feedback: "¡Evitaste un CEO Fraud! Tu verificación salvó 45.000€ a BEXEN.",
           trackFlag: "CEO Fraud evitado mediante verificación de último momento"
@@ -1364,7 +1403,7 @@ ERES UN AUTÉNTICO HÉROE DE LA CIBERSEGURIDAD EN BEXEN.`,
       options: [
         {
           text: "Ver resultados completos",
-          next: "safe_ending_ceo",
+          next: "results",
           points: 15,
           feedback: "¡Eres un héroe de BEXEN! Tu reporte salvó la empresa y ayudó a proteger a otros.",
           trackFlag: "CEO Fraud evitado Y reportado - Máxima puntuación - Héroe BEXEN"
@@ -1409,8 +1448,9 @@ SIEMPRE verifica con otros departamentos.`,
       options: [
         {
           text: "Ver análisis de mis errores fatales",
-          next: "compromised_ceo",
+          next: "results",
           points: 0,
+          // SIN forceMaxScore - El CEO mantiene puntuación normal
           feedback: "El CEO Fraud destruyó BEXEN. La verificación habría salvado todo.",
           trackFlag: "CEO Fraud exitoso - BEXEN cerrada - 45.000€ perdidos"
         }
@@ -1418,196 +1458,6 @@ SIEMPRE verifica con otros departamentos.`,
     },
 
     // ==================== FINALES PERSONALIZADOS BEXEN ====================
-    compromised: {
-      title: "💔 BEXEN Ya No Existe",
-      description: `Proporcionaste datos sensibles o realizaste acciones que comprometieron la seguridad de BEXEN.
-
-Debido a que empleados como tú cayeron en ataques similares de vishing, las consecuencias han sido catastróficas:
-
-📉 IMPACTO DEL CIBERATAQUE EN BEXEN:
-• Pérdida acumulada: 450.000€ en transferencias fraudulentas
-• Filtración de datos de cientos de clientes
-• Multas regulatorias (GDPR): 200.000€
-• Pérdida de contratos principales: 1.200.000€
-• Daño irreparable a 45 años de reputación empresarial
-
-💼 CONSECUENCIAS LABORALES Y SOCIALES:
-• BEXEN cesa operaciones definitivamente
-• 124 empleados pierden su trabajo HOY
-• Proveedores sin cobrar facturas pendientes
-• Familias enteras afectadas económicamente
-• Empleados deben buscar nuevo trabajo en un mercado difícil
-
-⚖️ CONSECUENCIAS LEGALES:
-• Investigación judicial en curso
-• Responsabilidad civil de directivos y empleados involucrados
-• Demandas masivas de clientes afectados
-• Antecedentes laborales negativos
-
-❌ BEXEN ha cerrado sus puertas para siempre.
-La empresa donde trabajabas ya no existe.
-
-------------------------
-
-⚠️ NOTA IMPORTANTE: Este es un escenario SIMULADO, pero las consecuencias SON REALES para miles de empresas cada año.
-
-🔴 DATOS REALES DE CIBERATAQUES:
-• 60% de PYMEs cierran en los 6 meses siguientes a un ciberataque grave
-• Coste medio de un ataque de vishing para empresas: 180.000€
-• 95% de brechas de seguridad tienen un componente de error humano
-• El CEO Fraud es el ataque más costoso (48.000€ de media por incidente)
-
-TU DECISIÓN CUENTA.
-Cada llamada. Cada email. Cada clic. Cada transferencia.
-Eres el eslabón que protege o el que rompe la cadena.
-
-LA CIBERSEGURIDAD NO ES OPCIONAL EN BEXEN.
-Es responsabilidad de CADA empleado, CADA día.`,
-      question: "¿Qué harás diferente a partir de ahora?",
-      options: [
-        {
-          text: "Ver análisis detallado de mis errores",
-          next: "results",
-          points: 0,
-          forceMaxScore: 35, // Garantiza máximo 35 puntos (fracaso)
-          feedback: "En la vida real, BEXEN no tendría segunda oportunidad. Aprende de esta experiencia simulada.",
-          trackFlag: "Cierre de BEXEN - Lección crítica aprendida"
-        }
-      ]
-    },
-    compromised_ceo: {
-      title: "💔 BEXEN Ya No Existe",
-      description: `Proporcionaste datos sensibles o realizaste acciones que comprometieron la seguridad de BEXEN.
-
-Debido a que empleados como tú cayeron en ataques similares de vishing, las consecuencias han sido catastróficas:
-
-📉 IMPACTO DEL CIBERATAQUE EN BEXEN:
-• Pérdida acumulada: 450.000€ en transferencias fraudulentas
-• Filtración de datos de cientos de clientes
-• Multas regulatorias (GDPR): 200.000€
-• Pérdida de contratos principales: 1.200.000€
-• Daño irreparable a 45 años de reputación empresarial
-
-💼 CONSECUENCIAS LABORALES Y SOCIALES:
-• BEXEN cesa operaciones definitivamente
-• 124 empleados pierden su trabajo HOY
-• Proveedores sin cobrar facturas pendientes
-• Familias enteras afectadas económicamente
-• Empleados deben buscar nuevo trabajo en un mercado difícil
-
-⚖️ CONSECUENCIAS LEGALES:
-• Investigación judicial en curso
-• Responsabilidad civil de directivos y empleados involucrados
-• Demandas masivas de clientes afectados
-• Antecedentes laborales negativos
-
-❌ BEXEN ha cerrado sus puertas para siempre.
-La empresa donde trabajabas ya no existe.
-
-------------------------
-
-⚠️ NOTA IMPORTANTE: Este es un escenario SIMULADO, pero las consecuencias SON REALES para miles de empresas cada año.
-
-🔴 DATOS REALES DE CIBERATAQUES:
-• 60% de PYMEs cierran en los 6 meses siguientes a un ciberataque grave
-• Coste medio de un ataque de vishing para empresas: 180.000€
-• 95% de brechas de seguridad tienen un componente de error humano
-• El CEO Fraud es el ataque más costoso (48.000€ de media por incidente)
-
-TU DECISIÓN CUENTA.
-Cada llamada. Cada email. Cada clic. Cada transferencia.
-Eres el eslabón que protege o el que rompe la cadena.
-
-LA CIBERSEGURIDAD NO ES OPCIONAL EN BEXEN.
-Es responsabilidad de CADA empleado, CADA día.`,
-      question: "¿Qué harás diferente a partir de ahora?",
-      options: [
-        {
-          text: "Ver análisis detallado de mis errores",
-          next: "results",
-          points: 0,
-          // SIN forceMaxScore - El CEO mantiene su sistema de puntuación normal
-          feedback: "En la vida real, BEXEN no tendría segunda oportunidad. Aprende de esta experiencia simulada.",
-          trackFlag: "Cierre de BEXEN - Lección crítica aprendida"
-        }
-      ]
-    },
-    safe_ending: {
-      title: "🎊 ¡FELICIDADES - Has Protegido a BEXEN! 🎊",
-      description: `Has evitado el ataque exitosamente. Tomaste decisiones inteligentes bajo presión y protegiste tu información y la de BEXEN.
-
-✅ BEXEN SIGUE OPERANDO gracias a empleados como tú
-✅ Nuestros 124 empleados mantienen sus puestos de trabajo
-✅ Nuestras 124 familias están seguras
-✅ Nuestros cientos de clientes están protegidos
-✅ Nuestros datos permanecen seguros
-✅ La reputación de BEXEN de 45 años permanece intacta
-✅ La solvencia financiera está asegurada
-
-Tu vigilancia y pensamiento crítico han salvado potencialmente:
-💰 Hasta 450.000€ en posibles pérdidas por fraudes
-🛡️ Datos personales de cientos de clientes
-🏢 45 años de reputación empresarial
-💼 124 puestos de trabajo
-
-Desde BEXEN queremos AGRADECERTE por:
-• Completar esta formación con éxito y seriedad
-• Demostrar pensamiento crítico bajo presión extrema
-• Ser parte activa de nuestra primera línea de defensa
-• Proteger el futuro de todos en BEXEN
-
-Tu vigilancia es exactamente lo que necesitamos en nuestra empresa.
-ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
-      question: "",
-      options: [
-        {
-          text: "Ver recomendaciones y análisis completo",
-          next: "results",
-          points: 10,
-          forceMinScore: 65, // Garantiza mínimo 65 puntos (aprobado)
-          feedback: "¡Excelente trabajo! Tu pensamiento crítico protege a BEXEN cada día.",
-          trackFlag: "Ataque evitado - BEXEN protegida - Empleado ejemplar"
-        }
-      ]
-    },
-    safe_ending_ceo: {
-      title: "🎊 ¡FELICIDADES - Has Protegido a BEXEN! 🎊",
-      description: `Has evitado el ataque exitosamente. Tomaste decisiones inteligentes bajo presión y protegiste tu información y la de BEXEN.
-
-✅ BEXEN SIGUE OPERANDO gracias a empleados como tú
-✅ Nuestros 124 empleados mantienen sus puestos de trabajo
-✅ Nuestras 124 familias están seguras
-✅ Nuestros cientos de clientes están protegidos
-✅ Nuestros datos permanecen seguros
-✅ La reputación de BEXEN de 45 años permanece intacta
-✅ La solvencia financiera está asegurada
-
-Tu vigilancia y pensamiento crítico han salvado potencialmente:
-💰 Hasta 450.000€ en posibles pérdidas por fraudes
-🛡️ Datos personales de cientos de clientes
-🏢 45 años de reputación empresarial
-💼 124 puestos de trabajo
-
-Desde BEXEN queremos AGRADECERTE por:
-• Completar esta formación con éxito y seriedad
-• Demostrar pensamiento crítico bajo presión extrema
-• Ser parte activa de nuestra primera línea de defensa
-• Proteger el futuro de todos en BEXEN
-
-Tu vigilancia es exactamente lo que necesitamos en nuestra empresa.
-ERES PARTE ESENCIAL DE LA SEGURIDAD DE BEXEN.`,
-      question: "",
-      options: [
-        {
-          text: "Ver recomendaciones y análisis completo",
-          next: "results",
-          points: 10,
-          // SIN forceMinScore - El CEO mantiene su sistema de puntuación normal
-          feedback: "¡Excelente trabajo! Tu pensamiento crítico protege a BEXEN cada día.",
-          trackFlag: "Ataque evitado - BEXEN protegida - Empleado ejemplar"
-        }
-      ]
-    }
   };
 
   const handleChoice = (option) => {
