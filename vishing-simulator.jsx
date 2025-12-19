@@ -59,19 +59,19 @@ const VishingSimulator = () => {
     'ceo': 'CEO/Director'
   };
 
-  // FUNCIONES DE STORAGE
+  // FUNCIONES DE STORAGE (usando localStorage del navegador)
   const loadUserData = async (name) => {
     try {
       const normalizedName = name.toLowerCase().trim().replace(/\s+/g, '-');
       
-      // Cargar resultados del usuario
-      const resultsKey = `results:${normalizedName}`;
-      const resultsData = await window.storage.get(resultsKey, true);
+      // Cargar resultados del usuario desde localStorage
+      const resultsKey = `bexen-results:${normalizedName}`;
+      const resultsData = localStorage.getItem(resultsKey);
       
       if (resultsData) {
-        const parsedResults = JSON.parse(resultsData.value);
+        const parsedResults = JSON.parse(resultsData);
         setUserResults(parsedResults);
-        console.log('Datos cargados para', name, ':', parsedResults);
+        console.log('✅ Datos cargados para', name, ':', parsedResults);
       } else {
         // Usuario nuevo - inicializar estructura vacía
         const emptyResults = {
@@ -83,21 +83,21 @@ const VishingSimulator = () => {
           ceo: null
         };
         setUserResults(emptyResults);
-        console.log('Usuario nuevo:', name, '- Inicializando resultados vacíos');
+        console.log('✅ Usuario nuevo:', name, '- Inicializando resultados vacíos');
       }
       
       // Añadir usuario a la lista global si no existe
-      const userListData = await window.storage.get('admin:users-list', true);
-      let userList = userListData ? JSON.parse(userListData.value) : [];
+      const userListData = localStorage.getItem('bexen-admin:users-list');
+      let userList = userListData ? JSON.parse(userListData) : [];
       
       if (!userList.includes(normalizedName)) {
         userList.push(normalizedName);
-        await window.storage.set('admin:users-list', JSON.stringify(userList), true);
+        localStorage.setItem('bexen-admin:users-list', JSON.stringify(userList));
       }
       
       return true;
     } catch (error) {
-      console.log('Error cargando datos del usuario:', error);
+      console.error('❌ Error cargando datos del usuario:', error);
       // En caso de error, inicializar vacío
       setUserResults({
         bank: null,
@@ -114,13 +114,13 @@ const VishingSimulator = () => {
   const saveUserResult = async (name, scenario, finalScore) => {
     try {
       const normalizedName = name.toLowerCase().trim().replace(/\s+/g, '-');
-      const resultsKey = `results:${normalizedName}`;
+      const resultsKey = `bexen-results:${normalizedName}`;
       
-      console.log('Guardando resultado:', { name, scenario, finalScore });
+      console.log('💾 Guardando resultado:', { name, scenario, finalScore });
       
-      // Cargar resultados existentes desde storage primero
-      const existingData = await window.storage.get(resultsKey, true);
-      let results = existingData ? JSON.parse(existingData.value) : {
+      // Cargar resultados existentes desde localStorage
+      const existingData = localStorage.getItem(resultsKey);
+      let results = existingData ? JSON.parse(existingData) : {
         bank: null,
         tech: null,
         tax: null,
@@ -136,11 +136,11 @@ const VishingSimulator = () => {
         fecha: new Date().toISOString()
       };
       
-      console.log('Resultados actualizados:', results);
+      console.log('📝 Resultados actualizados:', results);
       
-      // Guardar en storage
-      await window.storage.set(resultsKey, JSON.stringify(results), true);
-      console.log('✅ Guardado en storage exitoso');
+      // Guardar en localStorage
+      localStorage.setItem(resultsKey, JSON.stringify(results));
+      console.log('✅ Guardado en localStorage exitoso');
       
       // Actualizar estado local
       setUserResults(results);
@@ -149,6 +149,7 @@ const VishingSimulator = () => {
       return true;
     } catch (error) {
       console.error('❌ Error guardando resultado:', error);
+      alert('Error al guardar el resultado. Por favor, intenta de nuevo.');
       return false;
     }
   };
